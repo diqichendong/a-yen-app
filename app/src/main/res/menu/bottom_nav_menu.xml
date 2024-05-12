@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_nav_it_tpv"
+        android:title="@string/bottom_nav_tpv"
+        android:icon="@drawable/tpv_icon"
+        android:enabled="true" />
+    <item
+        android:id="@+id/bottom_nav_it_productos"
+        android:title="@string/bottom_nav_productos"
+        android:icon="@drawable/productos_icon"
+        android:enabled="true" />
+    <item
+        android:id="@+id/bottom_nav_it_lista_compra"
+        android:title="@string/bottom_nav_lista_compra"
+        android:icon="@drawable/lista_compra_icon"
+        android:enabled="true" />
+    <item
+        android:id="@+id/bottom_nav_it_registros"
+        android:title="@string/bottom_nav_lista_registros"
+        android:icon="@drawable/registros_icon"
+        android:enabled="true" />
+</menu>

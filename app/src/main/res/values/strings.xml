@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">A-YEN App</string>
+
+    <!-- Bottom Navigation -->
+    <string name="bottom_nav_tpv">TPV</string>
+    <string name="bottom_nav_productos">Productos</string>
+    <string name="bottom_nav_lista_compra">Lista compra</string>
+    <string name="bottom_nav_lista_registros">Registros</string>
+
+    <!-- Productos -->
+    <string name="hintBuscar">Buscar...</string>
+    <string name="btnEscanerCodigo">Escanee el código de barras</string>
+    <string name="btnModificar">Modificar</string>
+    <string name="btnEliminar">Eliminar</string>
+    <string name="btnHacerFoto">Hacer foto</string>
+    <string name="btnSubirFoto">Subir foto</string>
+    <string name="switchAddCompra">Añadir a compras</string>
+    <string name="btnCrear">CREAR</string>
+    <string name="btnCancelar">CANCELAR</string>
+    <string name="btnCrearProducto">Crear producto</string>
+    <string name="txtCodigo">Código:</string>
+    <string name="hintCodigo">Introduce el código</string>
+    <string name="txtNombre">Nombre:</string>
+    <string name="hintNombre">Indroduce el nombre</string>
+    <string name="txtPrecio">Precio:</string>
+    <string name="hintPrecio">9.99</string>
+    <string name="txtCoste">Coste:</string>
+    <string name="hintCoste">9.99</string>
+    <string name="txtStock">Stock:</string>
+    <string name="hintStock">123</string>
+    <string name="txtUmbral">Umbral de compra:</string>
+    <string name="hintUmbral">20</string>
+    <string name="precioInvalido">El precio no es válido</string>
+    <string name="costeInvalido">El precio no es válido</string>
+    <string name="stockInvalido">El precio no es válido</string>
+    <string name="umbralInvalido">El precio no es válido</string>
+    <string name="sinFoto">No se ha establecido una foto</string>
+    <string name="camposVacios">Todos los campos son obligatorios</string>
+    <string name="falloCrearProducto">No se ha podido crear el producto</string>
+    <string name="exitoCrearProducto">Producto creado correctamente</string>
+    <string name="falloCargarImagen">Fallo al cargar la imagen del producto</string>
+    <string name="falloCargarProductos">Fallo al cargar los productos</string>
+
+</resources>
