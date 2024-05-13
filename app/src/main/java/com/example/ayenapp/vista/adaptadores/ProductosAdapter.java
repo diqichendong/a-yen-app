@@ -1,6 +1,7 @@
 package com.example.ayenapp.vista.adaptadores;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Producto;
 import com.example.ayenapp.servicio.ProductoService;
 import com.example.ayenapp.util.Util;
+import com.example.ayenapp.vista.ProductosFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +27,12 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
 
     private List<Producto> datalist;
     private ProductoService productoService;
+    private ProductosFragment productosFragment;
 
-    public ProductosAdapter(List<Producto> datalist) {
+    public ProductosAdapter(ProductosFragment fragment, List<Producto> datalist) {
         this.datalist = datalist;
-        this.productoService = new ProductoService();
+        this.productosFragment = fragment;
+        this.productoService = new ProductoService(this);
     }
 
     @NonNull
@@ -48,20 +53,13 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         holder.txtStock.setText(producto.getStock().toString());
         holder.txtUmbral.setText(producto.getUmbralCompra().toString());
         productoService.loadFoto(producto, holder.imgProducto);
+
+        holder.btnEliminar.setOnClickListener(v -> borrarProductoDialog(v.getContext(), producto));
     }
 
     @Override
     public int getItemCount() {
         return datalist.size();
-    }
-
-    /**
-     * Establece una nueva lista
-     * @param datalist Lista de productos
-     */
-    public void setDatalist(List<Producto> datalist) {
-        this.datalist = datalist;
-        notifyDataSetChanged();
     }
 
     public class ProductoViewHolder extends RecyclerView.ViewHolder {
@@ -86,5 +84,43 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
             btnEliminar = itemView.findViewById(R.id.btnEliminarCard);
             imgProducto = itemView.findViewById(R.id.imgProductoCard);
         }
+    }
+
+    /**
+     * Establece una nueva lista
+     * @param datalist Lista de productos
+     */
+    public void setDatalist(List<Producto> datalist) {
+        this.datalist = datalist;
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Crear el dialog de eliminación de producto
+     * @param context Context donde se llama a esta función
+     * @param producto Producto a eliminar
+     */
+    private void borrarProductoDialog(Context context, Producto producto) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getString(R.string.dialogBorrarProductoTitulo))
+                .setMessage(context.getString(R.string.dialogBorrarProductoMensaje) + "\n\n" + producto)
+                .setCancelable(false)
+                .setPositiveButton(R.string.si, (dialog, which) -> {
+                    productosFragment.setBarraCarga(View.VISIBLE);
+                    productoService.eliminarProducto(context, producto);
+                })
+                .setNegativeButton(R.string.no, (dialog, which) -> {})
+                .create()
+                .show();
+    }
+
+    /**
+     * Elimina el producto de la lista
+     * @param producto Producto a eliminar
+     */
+    public void borrarProducto(Producto producto) {
+        datalist.remove(producto);
+        notifyDataSetChanged();
+        productosFragment.setBarraCarga(View.GONE);
     }
 }

@@ -107,7 +107,7 @@ public class ProductosFragment extends Fragment {
     private void initListaProductos() {
         rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
         productos = new ArrayList<>();
-        productosAdapter = new ProductosAdapter(productos);
+        productosAdapter = new ProductosAdapter(this, productos);
         rv.setAdapter(productosAdapter);
         productoService.getProductos();
     }

@@ -1,5 +1,7 @@
 package com.example.ayenapp.modelo;
 
+import com.example.ayenapp.util.Util;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -96,6 +98,6 @@ public class Producto implements Serializable {
 
     @Override
     public String toString() {
-        return codigo + " - " + nombre + " - " + precio + "€";
+        return "(" + codigo + ") " + nombre + " - " + Util.formatearDouble(precio) + "€";
     }
 }

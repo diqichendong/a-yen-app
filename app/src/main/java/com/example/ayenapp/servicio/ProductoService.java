@@ -30,6 +30,7 @@ public class ProductoService {
 
     private Context context;
     private ProductosFragment productosFragment;
+    private ProductosAdapter productosAdapter;
 
     public ProductoService() {
     }
@@ -41,6 +42,10 @@ public class ProductoService {
     public ProductoService(ProductosFragment fragment) {
         this.productosFragment = fragment;
         this.context = fragment.getContext();
+    }
+
+    public ProductoService(ProductosAdapter adapter) {
+        this.productosAdapter = adapter;
     }
 
     /**
@@ -77,7 +82,8 @@ public class ProductoService {
 
     /**
      * Cargar la imagen del producto
-     * @param producto Producto del que queremos la imagen
+     *
+     * @param producto  Producto del que queremos la imagen
      * @param imageView ImageView que actualizaremos
      */
     public void loadFoto(Producto producto, ImageView imageView) {
@@ -92,6 +98,9 @@ public class ProductoService {
                 });
     }
 
+    /**
+     * Obetener la lista de todos los productos de Firebase
+     */
     public void getProductos() {
         List<Producto> productos = new ArrayList<>();
 
@@ -117,6 +126,29 @@ public class ProductoService {
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(context, context.getString(R.string.falloCargarProductos), Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    /**
+     * Eliminar un producto de Firebase
+     *
+     * @param context  Contexto de donde se llama a la función
+     * @param producto Producto a eliminar
+     */
+    public void eliminarProducto(Context context, Producto producto) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference productoRef = database.getReference().child("productos/" + producto.getCodigo());
+        productoRef.removeValue().addOnSuccessListener(unused -> {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference productoStorageRef = storage.getReference().child(producto.getFoto());
+            productoStorageRef.delete().addOnSuccessListener(unused1 -> {
+                productosAdapter.borrarProducto(producto);
+                Toast.makeText(context, context.getString(R.string.exitoEliminarProducto), Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(e -> {
+                Toast.makeText(context, context.getString(R.string.falloEliminarProducto), Toast.LENGTH_SHORT).show();
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(context, context.getString(R.string.falloEliminarProducto), Toast.LENGTH_SHORT).show();
         });
     }
 

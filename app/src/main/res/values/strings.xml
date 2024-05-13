@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">A-YEN App</string>
 
+    <string name="si">Sí</string>
+    <string name="no">No</string>
+
     <!-- Bottom Navigation -->
     <string name="bottom_nav_tpv">TPV</string>
     <string name="bottom_nav_productos">Productos</string>
@@ -40,5 +43,9 @@
     <string name="exitoCrearProducto">Producto creado correctamente</string>
     <string name="falloCargarImagen">Fallo al cargar la imagen del producto</string>
     <string name="falloCargarProductos">Fallo al cargar los productos</string>
+    <string name="dialogBorrarProductoTitulo">Eliminar producto</string>
+    <string name="dialogBorrarProductoMensaje">¿Estás seguro que quieres borrar este producto?</string>
+    <string name="falloEliminarProducto">No se ha podido eliminar el producto</string>
+    <string name="exitoEliminarProducto">Se ha eliminado el producto correctamente</string>
 
 </resources>
