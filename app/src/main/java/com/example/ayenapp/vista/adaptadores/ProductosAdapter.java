@@ -1,15 +1,14 @@
 package com.example.ayenapp.vista.adaptadores;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,9 +17,9 @@ import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Producto;
 import com.example.ayenapp.servicio.ProductoService;
 import com.example.ayenapp.util.Util;
+import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.ProductoViewHolder> {
@@ -55,6 +54,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         productoService.loadFoto(producto, holder.imgProducto);
 
         holder.btnEliminar.setOnClickListener(v -> borrarProductoDialog(v.getContext(), producto));
+        holder.btnModificar.setOnClickListener(v -> modificarProducto(v.getContext(), producto));
     }
 
     @Override
@@ -122,5 +122,11 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         datalist.remove(producto);
         notifyDataSetChanged();
         productosFragment.setBarraCarga(View.GONE);
+    }
+
+    private void modificarProducto(Context context, Producto producto) {
+        Intent i = new Intent(context, GuardarProductoActivity.class);
+        i.putExtra(context.getString(R.string.keyProductoAntiguo), producto);
+        context.startActivity(i);
     }
 }

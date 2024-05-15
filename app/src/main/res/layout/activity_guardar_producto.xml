@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".vista.CrearProductoActivity">
+    tools:context=".vista.GuardarProductoActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -109,7 +109,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/hintCodigo"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:selectAllOnFocus="true" />
 
                     <ImageButton
                         android:id="@+id/btnCodigoBarras"
@@ -140,7 +141,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/hintNombre"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:selectAllOnFocus="true" />
 
                 </LinearLayout>
 
@@ -166,7 +168,8 @@
                         android:ems="5"
                         android:hint="@string/hintPrecio"
                         android:inputType="numberDecimal"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"
+                        android:selectAllOnFocus="true" />
 
                     <TextView
                         android:id="@+id/textView6"
@@ -198,7 +201,8 @@
                         android:ems="5"
                         android:hint="@string/hintCoste"
                         android:inputType="numberDecimal"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"
+                        android:selectAllOnFocus="true" />
 
                     <TextView
                         android:id="@+id/textView5"
@@ -229,7 +233,8 @@
                         android:layout_weight="0"
                         android:ems="5"
                         android:hint="@string/hintStock"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:selectAllOnFocus="true" />
 
                 </LinearLayout>
 
@@ -254,7 +259,8 @@
                         android:layout_weight="0"
                         android:ems="5"
                         android:hint="@string/hintUmbral"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:selectAllOnFocus="true" />
 
                 </LinearLayout>
 
@@ -276,7 +282,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text="@string/btnCrear" />
+                        android:text="@string/btnGuardar" />
 
                     <Button
                         android:id="@+id/btnCancelar"

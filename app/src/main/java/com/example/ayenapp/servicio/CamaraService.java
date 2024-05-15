@@ -11,7 +11,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.FileProvider;
 
-import com.example.ayenapp.vista.CrearProductoActivity;
+import com.example.ayenapp.vista.GuardarProductoActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,18 +21,18 @@ import java.util.Locale;
 
 public class CamaraService {
 
-    private CrearProductoActivity crearProductoActivity;
+    private GuardarProductoActivity guardarProductoActivity;
     private ActivityResultLauncher<Intent> cameraActivityLauncher;
 
     private Uri fotoUri;
 
-    public CamaraService(CrearProductoActivity activity) {
-        this.crearProductoActivity = activity;
+    public CamaraService(GuardarProductoActivity activity) {
+        this.guardarProductoActivity = activity;
         cameraActivityLauncher = activity.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        crearProductoActivity.setImgProducto(fotoUri);
+                        guardarProductoActivity.setImgProducto(fotoUri);
                     }
                 }
         );
@@ -44,7 +44,7 @@ public class CamaraService {
     public void abrirCamara() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 500 * 500);
-        if (cameraIntent.resolveActivity(crearProductoActivity.getPackageManager()) != null) {
+        if (cameraIntent.resolveActivity(guardarProductoActivity.getPackageManager()) != null) {
             File fotoFile = null;
             try {
                 fotoFile = createImageFile();
@@ -52,7 +52,7 @@ public class CamaraService {
                 Log.e("Camara", ex.getMessage());
             }
             if (fotoFile != null) {
-                fotoUri = FileProvider.getUriForFile(crearProductoActivity, "com.example.ayenapp.fileprovider", fotoFile);
+                fotoUri = FileProvider.getUriForFile(guardarProductoActivity, "com.example.ayenapp.fileprovider", fotoFile);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri);
                 cameraActivityLauncher.launch(cameraIntent);
             }
@@ -67,7 +67,7 @@ public class CamaraService {
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = crearProductoActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = guardarProductoActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 

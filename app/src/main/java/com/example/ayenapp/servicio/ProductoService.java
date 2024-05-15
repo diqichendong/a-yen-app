@@ -2,7 +2,6 @@ package com.example.ayenapp.servicio;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -12,7 +11,7 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Producto;
-import com.example.ayenapp.vista.CrearProductoActivity;
+import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
 import com.example.ayenapp.vista.adaptadores.ProductosAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -28,15 +27,17 @@ import java.util.List;
 
 public class ProductoService {
 
+    private static String NODO_BASE = "productos";
+    private static final String LOCAL_URI_PREFIX = "content://";
+
     private Context context;
+    private GuardarProductoActivity guardarProductoActivity;
     private ProductosFragment productosFragment;
     private ProductosAdapter productosAdapter;
 
-    public ProductoService() {
-    }
-
-    public ProductoService(Context context) {
-        this.context = context;
+    public ProductoService(GuardarProductoActivity activity) {
+        this.guardarProductoActivity = activity;
+        this.context = activity;
     }
 
     public ProductoService(ProductosFragment fragment) {
@@ -55,29 +56,47 @@ public class ProductoService {
      * @param uri      Foto del producto a guardar
      */
     public void guardarProducto(Producto producto, Uri uri) {
-        CrearProductoActivity activity = (CrearProductoActivity) context;
-        activity.setBarraCarga(View.VISIBLE);
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child(producto.getFoto());
-        storageRef.putFile(uri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference ref = database.getReference("productos");
-                    ref.child(producto.getCodigo()).setValue(producto)
-                            .addOnSuccessListener(unused -> {
-                                Toast.makeText(context, context.getString(R.string.exitoCrearProducto), Toast.LENGTH_SHORT).show();
-                                activity.setBarraCarga(View.GONE);
-                                activity.finish();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(context, context.getString(R.string.falloCrearProducto), Toast.LENGTH_SHORT).show();
-                                activity.setBarraCarga(View.GONE);
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, context.getString(R.string.falloCrearProducto), Toast.LENGTH_SHORT).show();
-                    activity.setBarraCarga(View.GONE);
+        guardarProductoActivity.setBarraCarga(View.VISIBLE);
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(NODO_BASE);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+        if (uri != null) {  // Si hay cambio de foto
+            // Guardar foto producto
+            storageRef.child(producto.getFoto()).putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                // Guardar producto
+                databaseRef.child(producto.getCodigo()).setValue(producto).addOnSuccessListener(unused -> {
+                    exitoGuardar();
+                }).addOnFailureListener(e -> {
+                    falloGuardar();
                 });
+            }).addOnFailureListener(e -> {
+                falloGuardar();
+            });
+        } else {    // No hay cambio de foto
+            // Guardar producto
+            databaseRef.child(producto.getCodigo()).setValue(producto).addOnSuccessListener(unused -> {
+                exitoGuardar();
+            }).addOnFailureListener(e -> {
+                falloGuardar();
+            });
+        }
+    }
+
+    /**
+     * Procedimiento al guardar con éxito un producto
+     */
+    private void exitoGuardar() {
+        Toast.makeText(guardarProductoActivity, guardarProductoActivity.getString(R.string.exitoGuardarProducto), Toast.LENGTH_SHORT).show();
+        guardarProductoActivity.setBarraCarga(View.GONE);
+        guardarProductoActivity.finish();
+    }
+
+    /**
+     * Procedimiento al fallar en guardar un producto
+     */
+    private void falloGuardar() {
+        Toast.makeText(guardarProductoActivity, guardarProductoActivity.getString(R.string.falloGuardarProducto), Toast.LENGTH_SHORT).show();
+        guardarProductoActivity.setBarraCarga(View.GONE);
     }
 
     /**
@@ -107,7 +126,7 @@ public class ProductoService {
         productosFragment.setBarraCarga(View.VISIBLE);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference productosRef = database.getReference().child("productos");
+        DatabaseReference productosRef = database.getReference().child(NODO_BASE);
         productosRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -137,7 +156,7 @@ public class ProductoService {
      */
     public void eliminarProducto(Context context, Producto producto) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference productoRef = database.getReference().child("productos/" + producto.getCodigo());
+        DatabaseReference productoRef = database.getReference(NODO_BASE).child(producto.getCodigo());
         productoRef.removeValue().addOnSuccessListener(unused -> {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference productoStorageRef = storage.getReference().child(producto.getFoto());

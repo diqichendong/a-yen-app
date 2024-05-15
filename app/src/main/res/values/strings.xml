@@ -18,7 +18,7 @@
     <string name="btnHacerFoto">Hacer foto</string>
     <string name="btnSubirFoto">Subir foto</string>
     <string name="switchAddCompra">Añadir a compras</string>
-    <string name="btnCrear">CREAR</string>
+    <string name="btnGuardar">GUARDAR</string>
     <string name="btnCancelar">CANCELAR</string>
     <string name="btnCrearProducto">Crear producto</string>
     <string name="txtCodigo">Código:</string>
@@ -39,13 +39,15 @@
     <string name="umbralInvalido">El precio no es válido</string>
     <string name="sinFoto">No se ha establecido una foto</string>
     <string name="camposVacios">Todos los campos son obligatorios</string>
-    <string name="falloCrearProducto">No se ha podido crear el producto</string>
-    <string name="exitoCrearProducto">Producto creado correctamente</string>
+    <string name="falloGuardarProducto">No se ha podido guardar el producto</string>
+    <string name="exitoGuardarProducto">Producto guardado correctamente</string>
     <string name="falloCargarImagen">Fallo al cargar la imagen del producto</string>
     <string name="falloCargarProductos">Fallo al cargar los productos</string>
     <string name="dialogBorrarProductoTitulo">Eliminar producto</string>
     <string name="dialogBorrarProductoMensaje">¿Estás seguro que quieres borrar este producto?</string>
     <string name="falloEliminarProducto">No se ha podido eliminar el producto</string>
     <string name="exitoEliminarProducto">Se ha eliminado el producto correctamente</string>
+    <string name="mensajeCodigoNoEditable">El código no se puede modificar</string>
+    <string name="keyProductoAntiguo">productoAntiguo</string>
 
 </resources>

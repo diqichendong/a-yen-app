@@ -3,19 +3,19 @@ package com.example.ayenapp.servicio;
 import androidx.activity.result.ActivityResultLauncher;
 
 import com.example.ayenapp.R;
-import com.example.ayenapp.vista.CrearProductoActivity;
+import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 public class EscanerService {
 
-    private CrearProductoActivity crearProductoActivity;
+    private GuardarProductoActivity guardarProductoActivity;
     private ProductosFragment productosFragment;
     private ActivityResultLauncher<ScanOptions> scannerActivityLauncher;
 
-    public EscanerService(CrearProductoActivity activity) {
-        this.crearProductoActivity = activity;
+    public EscanerService(GuardarProductoActivity activity) {
+        this.guardarProductoActivity = activity;
         scannerActivityLauncher = activity.registerForActivityResult(
                 new ScanContract(),
                 result -> {
@@ -45,8 +45,8 @@ public class EscanerService {
         ScanOptions options = new ScanOptions();
         options.setDesiredBarcodeFormats(ScanOptions.PRODUCT_CODE_TYPES);
         int btnEscanerCodigo = R.string.btnEscanerCodigo;
-        if (crearProductoActivity != null) {
-            options.setPrompt(crearProductoActivity.getString(btnEscanerCodigo));
+        if (guardarProductoActivity != null) {
+            options.setPrompt(guardarProductoActivity.getString(btnEscanerCodigo));
         } else if (productosFragment != null) {
             options.setPrompt(productosFragment.getString(btnEscanerCodigo));
         }

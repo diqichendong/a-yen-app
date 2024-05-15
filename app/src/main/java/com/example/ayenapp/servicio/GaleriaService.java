@@ -9,23 +9,20 @@ import android.util.Log;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
-import com.example.ayenapp.vista.CrearProductoActivity;
+import com.example.ayenapp.vista.GuardarProductoActivity;
 
 public class GaleriaService {
 
-    private CrearProductoActivity crearProductoActivity;
     private ActivityResultLauncher<Intent> galleryActivityLauncher;
 
     private Uri fotoUri;
 
-    public GaleriaService(CrearProductoActivity activity) {
-        this.crearProductoActivity = activity;
+    public GaleriaService(GuardarProductoActivity activity) {
         galleryActivityLauncher = activity.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         fotoUri = result.getData().getData();
-                        Log.d("aaaaaaaaaaa", fotoUri.toString());
                         activity.setImgProducto(fotoUri);
                     }
                 });

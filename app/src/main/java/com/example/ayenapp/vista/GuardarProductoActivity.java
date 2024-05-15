@@ -30,22 +30,27 @@ import com.example.ayenapp.servicio.CamaraService;
 import com.example.ayenapp.servicio.EscanerService;
 import com.example.ayenapp.servicio.GaleriaService;
 import com.example.ayenapp.servicio.ProductoService;
+import com.example.ayenapp.util.Util;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
-public class CrearProductoActivity extends AppCompatActivity {
+public class GuardarProductoActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private static final int REQUEST_READ_EXTERNAL_STORAGE_PERMISSION = 101;
     private static final int REQUEST_SCANNER_CAMERA_PERMISSION = 102;
     private static final String IMAGE_STORAGE_BASE = "productos/";
-    private static final String LOCAL_URI_PREFIX = "content://";
 
     private ImageView imgProducto;
     private EditText txtCodigo, txtNombre, txtPrecio, txtCoste, txtStock, txtUmbral;
+    private SwitchMaterial switchAddCompra;
+    private ImageButton btnCodigoBarras;
     private ProgressBar barraCarga;
+    private Toast toast;
 
     private Uri fotoUri;
     private Producto producto;
+    private Producto productoAntiguo;
 
     private ProductoService productoService;
     private CamaraService camaraService;
@@ -56,7 +61,7 @@ public class CrearProductoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_crear_producto);
+        setContentView(R.layout.activity_guardar_producto);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -70,6 +75,8 @@ public class CrearProductoActivity extends AppCompatActivity {
      * Inicializa los elementos de la pantalla
      */
     private void init() {
+        productoAntiguo = (Producto) getIntent().getSerializableExtra(getString(R.string.keyProductoAntiguo));
+
         productoService = new ProductoService(this);
         camaraService = new CamaraService(this);
         galeriaService = new GaleriaService(this);
@@ -82,15 +89,35 @@ public class CrearProductoActivity extends AppCompatActivity {
         txtUmbral = findViewById(R.id.txtUmbral);
         txtStock = findViewById(R.id.txtStock);
         imgProducto = findViewById(R.id.imgProducto);
+        switchAddCompra = findViewById(R.id.switchAddCompra);
+        btnCodigoBarras = findViewById(R.id.btnCodigoBarras);
 
         initToolbar();
         initHacerFoto();
         initSubirFoto();
         initCodigoBarras();
+        initProductoAntiguo();
         initCrear();
         initBarraCarga();
 
         findViewById(R.id.btnCancelar).setOnClickListener(v -> finish());
+    }
+
+    private void initProductoAntiguo() {
+        if (productoAntiguo != null) {
+            txtCodigo.setText(productoAntiguo.getCodigo());
+            txtNombre.setText(productoAntiguo.getNombre());
+            txtPrecio.setText(Util.formatearDouble(productoAntiguo.getPrecio()));
+            txtCoste.setText(Util.formatearDouble(productoAntiguo.getCoste()));
+            txtStock.setText(productoAntiguo.getStock().toString());
+            txtUmbral.setText(productoAntiguo.getUmbralCompra().toString());
+            productoService.loadFoto(productoAntiguo, imgProducto);
+            switchAddCompra.setVisibility(View.GONE);
+            txtCodigo.setFocusable(false);
+            txtCodigo.setFocusableInTouchMode(false);
+            txtCodigo.setOnClickListener(v -> mostraMensajeCodigoNoEditable());
+            btnCodigoBarras.setOnClickListener(v -> mostraMensajeCodigoNoEditable());
+        }
     }
 
     /**
@@ -125,7 +152,6 @@ public class CrearProductoActivity extends AppCompatActivity {
      * Inicializar el botón del escaner de códigos de barras
      */
     private void initCodigoBarras() {
-        ImageButton btnCodigoBarras = findViewById(R.id.btnCodigoBarras);
         btnCodigoBarras.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_SCANNER_CAMERA_PERMISSION);
@@ -140,7 +166,7 @@ public class CrearProductoActivity extends AppCompatActivity {
      */
     private void initCrear() {
         Button btnCrear = findViewById(R.id.btnCrear);
-        btnCrear.setOnClickListener(v -> crearProducto());
+        btnCrear.setOnClickListener(v -> guardarProducto());
     }
 
     /**
@@ -165,7 +191,7 @@ public class CrearProductoActivity extends AppCompatActivity {
     /**
      * Crea el producto
      */
-    private void crearProducto() {
+    private void guardarProducto() {
         if (isDatosValidos()) {
             producto = new Producto(
                     txtCodigo.getText().toString().trim(),
@@ -176,6 +202,7 @@ public class CrearProductoActivity extends AppCompatActivity {
                     Integer.parseInt(txtUmbral.getText().toString()),
                     IMAGE_STORAGE_BASE + txtCodigo.getText().toString().trim() + ".jpg"
             );
+
             productoService.guardarProducto(producto, fotoUri);
         }
     }
@@ -211,7 +238,7 @@ public class CrearProductoActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.umbralInvalido), Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (fotoUri == null) {
+        if (fotoUri == null && productoAntiguo == null) {
             Toast.makeText(this, getString(R.string.sinFoto), Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -226,6 +253,7 @@ public class CrearProductoActivity extends AppCompatActivity {
 
     /**
      * Establece la imagen del producto
+     *
      * @param fotoUri URI de la imagen
      */
     public void setImgProducto(Uri fotoUri) {
@@ -235,6 +263,7 @@ public class CrearProductoActivity extends AppCompatActivity {
 
     /**
      * Establece el código en el campo
+     *
      * @param codigo Código a establecer
      */
     public void setTxtCodigo(String codigo) {
@@ -243,6 +272,7 @@ public class CrearProductoActivity extends AppCompatActivity {
 
     /**
      * Establecer el estado de la barra de carga
+     *
      * @param estado Estado de la barra View.VISIBLE o View.GONE
      */
     public void setBarraCarga(int estado) {
@@ -252,6 +282,14 @@ public class CrearProductoActivity extends AppCompatActivity {
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
+    }
+
+    private void mostraMensajeCodigoNoEditable() {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, getString(R.string.mensajeCodigoNoEditable), Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override
