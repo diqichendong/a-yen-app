@@ -13,6 +13,7 @@ import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Producto;
 import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
+import com.example.ayenapp.vista.TpvFragment;
 import com.example.ayenapp.vista.adaptadores.ProductosAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +34,7 @@ public class ProductoService {
     private Context context;
     private GuardarProductoActivity guardarProductoActivity;
     private ProductosFragment productosFragment;
+    private TpvFragment tpvFragment;
     private ProductosAdapter productosAdapter;
 
     public ProductoService(GuardarProductoActivity activity) {
@@ -43,6 +45,11 @@ public class ProductoService {
     public ProductoService(ProductosFragment fragment) {
         this.productosFragment = fragment;
         this.context = fragment.getContext();
+    }
+
+    public ProductoService(TpvFragment tpvFragment) {
+        this.tpvFragment = tpvFragment;
+        this.context = tpvFragment.getContext();
     }
 
     public ProductoService(ProductosAdapter adapter) {
@@ -123,7 +130,13 @@ public class ProductoService {
     public void getProductos() {
         List<Producto> productos = new ArrayList<>();
 
-        productosFragment.setBarraCarga(View.VISIBLE);
+        if (productosFragment != null) {
+            productosFragment.setBarraCarga(View.VISIBLE);
+        }
+
+        if (tpvFragment != null) {
+            tpvFragment.setBarraCarga(View.VISIBLE);
+        }
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference productosRef = database.getReference().child(NODO_BASE);
@@ -137,13 +150,31 @@ public class ProductoService {
                     productos.add(producto);
                 }
 
-                productosFragment.setProductos(productos);
-                productosFragment.setBarraCarga(View.GONE);
+                // Producto fragment
+                if (productosFragment != null) {
+                    productosFragment.setProductos(productos);
+                    productosFragment.setBarraCarga(View.GONE);
+                }
+
+                // Tpv fragment
+                if (tpvFragment != null) {
+                    tpvFragment.setProductos(productos);
+                    tpvFragment.setBarraCarga(View.GONE);
+                }
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(context, context.getString(R.string.falloCargarProductos), Toast.LENGTH_SHORT).show();
+                // Producto fragment
+                if (productosFragment != null) {
+                    Toast.makeText(context, context.getString(R.string.falloCargarProductos), Toast.LENGTH_SHORT).show();
+                }
+
+                // Tpv fragment
+                if (tpvFragment != null) {
+                    Toast.makeText(context, context.getString(R.string.falloCargarProductos), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

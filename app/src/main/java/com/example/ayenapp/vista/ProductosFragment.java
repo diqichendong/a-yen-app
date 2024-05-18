@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 
 import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Producto;
@@ -33,10 +32,11 @@ import java.util.List;
 
 public class ProductosFragment extends Fragment {
 
+    private MainActivity mainActivity;
+
     private View view;
     private RecyclerView rv;
     private EditText txtBuscar;
-    private ProgressBar barraCarga;
 
     private EscanerService escanerService;
     private ProductoService productoService;
@@ -68,13 +68,14 @@ public class ProductosFragment extends Fragment {
      * Inicializa los componentes de la vista
      */
     private void init() {
+        mainActivity = (MainActivity) getActivity();
+
         escanerService = new EscanerService(this);
         productoService = new ProductoService(this);
 
-        rv = view.findViewById(R.id.rv);
+        rv = view.findViewById(R.id.rvProductos);
         txtBuscar = view.findViewById(R.id.txtBuscar);
 
-        initBarraCarga();
         initCrearProducto();
         initListaProductos();
         initBuscador();
@@ -136,15 +137,6 @@ public class ProductosFragment extends Fragment {
     }
 
     /**
-     * Inicializar la barra de carga
-     */
-    private void initBarraCarga() {
-        barraCarga = view.findViewById(R.id.barraCargaProductos);
-        barraCarga.setIndeterminate(true);
-        barraCarga.setVisibility(View.GONE);
-    }
-
-    /**
      * Establece el texto en el campo de búsqueda
      * @param cadena Texto de búsqueda
      */
@@ -157,8 +149,7 @@ public class ProductosFragment extends Fragment {
      * @param estado Estado de la barra View.VISIBLE o View.GONE
      */
     public void setBarraCarga(int estado) {
-        barraCarga.setVisibility(estado);
-        view.setClickable(estado != View.VISIBLE);
+        mainActivity.setBarraCarga(estado);
     }
 
     public void setProductos(List<Producto> productos) {

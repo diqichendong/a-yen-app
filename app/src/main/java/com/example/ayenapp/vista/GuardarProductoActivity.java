@@ -173,7 +173,7 @@ public class GuardarProductoActivity extends AppCompatActivity {
      * Inicializar la barra de carga
      */
     private void initBarraCarga() {
-        barraCarga = findViewById(R.id.barraCarga);
+        barraCarga = findViewById(R.id.barraCargaGuardar);
         barraCarga.setIndeterminate(true);
         barraCarga.setVisibility(View.GONE);
     }

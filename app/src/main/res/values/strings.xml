@@ -50,4 +50,14 @@
     <string name="mensajeCodigoNoEditable">El código no se puede modificar</string>
     <string name="keyProductoAntiguo">productoAntiguo</string>
 
+    <!-- TPV -->
+    <string name="txtCantidadLineaVenta">Cantidad:</string>
+    <string name="btnFinalizarVenta">FINALIZAR</string>
+    <string name="btnCancelarVenta">CANCELAR</string>
+    <string name="btnEscanearVenta">Escanear</string>
+    <string name="btnBuscarVenta">Buscar</string>
+    <string name="mensajeProductoNoExiste">El producto no existe</string>
+    <string name="dialogCancelarVentaTitulo">Cancelar venta</string>
+    <string name="dialogCancelarVentaMensaje">¿Estás seguro que quiere cancelar la venta?</string>
+
 </resources>

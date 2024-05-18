@@ -7,15 +7,6 @@
     android:padding="10dp"
     tools:context=".vista.ProductosFragment">
 
-    <ProgressBar
-        android:id="@+id/barraCargaProductos"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -24,7 +15,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barraCargaProductos">
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/txtBuscar"
@@ -34,7 +25,8 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="@string/hintBuscar"
-            android:inputType="text" />
+            android:inputType="text"
+            android:selectAllOnFocus="true" />
 
         <ImageButton
             android:id="@+id/btnCodigoBarrasProductos"
@@ -55,7 +47,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
+        android:id="@+id/rvProductos"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"

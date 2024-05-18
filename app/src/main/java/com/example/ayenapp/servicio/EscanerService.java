@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import com.example.ayenapp.R;
 import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
+import com.example.ayenapp.vista.TpvFragment;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -12,6 +13,7 @@ public class EscanerService {
 
     private GuardarProductoActivity guardarProductoActivity;
     private ProductosFragment productosFragment;
+    private TpvFragment tpvFragment;
     private ActivityResultLauncher<ScanOptions> scannerActivityLauncher;
 
     public EscanerService(GuardarProductoActivity activity) {
@@ -33,6 +35,18 @@ public class EscanerService {
                 result -> {
                     if (result.getContents() != null) {
                         fragment.setTxtBuscar(result.getContents());
+                    }
+                }
+        );
+    }
+
+    public EscanerService(TpvFragment fragment) {
+        this.tpvFragment = fragment;
+        scannerActivityLauncher = fragment.registerForActivityResult(
+                new ScanContract(),
+                result -> {
+                    if (result.getContents() != null) {
+                        fragment.manejarCodigoBarras(result.getContents());
                     }
                 }
         );
