@@ -3,6 +3,7 @@ package com.example.ayenapp.modelo;
 import com.example.ayenapp.util.Util;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,10 +11,10 @@ public class Venta implements Serializable {
 
     private String codigo;
     private String fecha;
-    private Map<String, Linea> lineasVenta;
+    private List<Linea> lineasVenta;
     private Double total;
 
-    public Venta(String codigo, String fecha, Map<String, Linea> lineasVenta, Double total) {
+    public Venta(String codigo, String fecha, List<Linea> lineasVenta, Double total) {
         this.codigo = codigo;
         this.fecha = fecha;
         this.lineasVenta = lineasVenta;
@@ -36,11 +37,11 @@ public class Venta implements Serializable {
         this.fecha = fecha;
     }
 
-    public Map<String, Linea> getLineasVenta() {
+    public List<Linea> getLineasVenta() {
         return lineasVenta;
     }
 
-    public void setLineasVenta(Map<String, Linea> lineasVenta) {
+    public void setLineasVenta(List<Linea> lineasVenta) {
         this.lineasVenta = lineasVenta;
     }
 

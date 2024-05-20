@@ -31,7 +31,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     public ProductosAdapter(ProductosFragment fragment, List<Producto> datalist) {
         this.datalist = datalist;
         this.productosFragment = fragment;
-        this.productoService = new ProductoService(this);
+        this.productoService = new ProductoService(this, fragment.getContext());
     }
 
     @NonNull

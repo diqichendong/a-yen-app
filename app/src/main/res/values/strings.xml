@@ -3,6 +3,7 @@
 
     <string name="si">Sí</string>
     <string name="no">No</string>
+    <string name="cerrar">Cerrar</string>
 
     <!-- Bottom Navigation -->
     <string name="bottom_nav_tpv">TPV</string>
@@ -49,6 +50,7 @@
     <string name="exitoEliminarProducto">Se ha eliminado el producto correctamente</string>
     <string name="mensajeCodigoNoEditable">El código no se puede modificar</string>
     <string name="keyProductoAntiguo">productoAntiguo</string>
+    <string name="activityGuardarProductoTitle">Guardar producto</string>
 
     <!-- TPV -->
     <string name="txtCantidadLineaVenta">Cantidad:</string>
@@ -59,5 +61,13 @@
     <string name="mensajeProductoNoExiste">El producto no existe</string>
     <string name="dialogCancelarVentaTitulo">Cancelar venta</string>
     <string name="dialogCancelarVentaMensaje">¿Estás seguro que quiere cancelar la venta?</string>
+    <string name="activityBuscarTitle">Buscar producto</string>
+    <string name="txtTotal">TOTAL:</string>
+    <string name="btnAdd">Añadir</string>
+    <string name="exitoGuardarVenta">Se ha guardado la venta con éxito</string>
+    <string name="falloGuardarVenta">No se ha podido guardar la venta</string>
+    <string name="dialogFinalizarVentaTitle">Finalizar venta</string>
+    <string name="dialogFinalizarVentaMensaje">¿Estás seguro que quieres finalizar la venta?</string>
+    <string name="mensajeVentaVacia">No se se ha añadido ningún producto a la venta</string>
 
 </resources>

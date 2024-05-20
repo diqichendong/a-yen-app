@@ -1,12 +1,16 @@
 package com.example.ayenapp.vista;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,11 +26,14 @@ import android.widget.Toast;
 import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Linea;
 import com.example.ayenapp.modelo.Producto;
+import com.example.ayenapp.modelo.Venta;
 import com.example.ayenapp.servicio.EscanerService;
 import com.example.ayenapp.servicio.ProductoService;
+import com.example.ayenapp.servicio.VentaService;
 import com.example.ayenapp.util.Util;
 import com.example.ayenapp.vista.adaptadores.TpvAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,11 +47,15 @@ public class TpvFragment extends Fragment {
     private View view;
     private Button btnFinalizar, btnCancelar, btnBuscar, btnEscanear;
     private RecyclerView rv;
+    private TextView txtTotal;
+
+    private VentaService ventaService;
 
     private TpvAdapter tpvAdapter;
     private List<Linea> lineasVenta;
     private List<Producto> productos;
     private Toast toast;
+    private ActivityResultLauncher<Intent> startForResult;
 
     // Launcher para pedir permisos
     ActivityResultLauncher<String[]> requestPermissionLauncher = registerForActivityResult(
@@ -77,15 +88,87 @@ public class TpvFragment extends Fragment {
         btnEscanear = view.findViewById(R.id.btnEscanearVenta);
         btnBuscar = view.findViewById(R.id.btnBuscarVenta);
         rv = view.findViewById(R.id.rvVenta);
+        txtTotal = view.findViewById(R.id.txtTotalVenta);
 
         escanerService = new EscanerService(this);
         productoService = new ProductoService(this);
+        ventaService = new VentaService(this);
 
         productoService.getProductos();
+
 
         initListaLineas();
         initEscaner();
         initCancelar();
+        initBuscar();
+        initFinalizar();
+    }
+
+    /**
+     * Inicializar el botón de finalizar venta
+     */
+    private void initFinalizar() {
+        btnFinalizar.setOnClickListener(v -> {
+            if (lineasVenta.size() > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.dialogFinalizarVentaTitle)
+                        .setMessage(R.string.dialogFinalizarVentaMensaje)
+                        .setCancelable(false)
+                        .setNegativeButton(R.string.no, null)
+                        .setPositiveButton(R.string.si, (dialog, which) -> finalizarVenta())
+                        .create()
+                        .show();
+            } else {
+                if (toast != null){
+                    toast.cancel();
+                }
+                toast = Toast.makeText(getContext(), getString(R.string.mensajeVentaVacia), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+    }
+
+    /**
+     * Crear la venta y guardarla
+     */
+    private void finalizarVenta() {
+        String fecha = Util.getFechaHoraActual();
+        Venta venta = new Venta(
+                Util.crearCodigoVentaCompra(fecha),
+                fecha,
+                lineasVenta,
+                lineasVenta.stream().mapToDouble(Linea::getPrecio).sum()
+        );
+        ventaService.guardarVenta(venta);
+    }
+
+    /**
+     * Inicializar el botón buscar
+     */
+    private void initBuscar() {
+        startForResult = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            Producto producto = (Producto) data.getSerializableExtra("producto");
+                            if (producto != null) {
+                                addLineaVenta(producto);
+                            }
+                        }
+                    }
+                }
+        );
+        btnBuscar.setOnClickListener(v -> {
+            mainActivity.setBarraCarga(View.VISIBLE);
+
+            Intent i = new Intent(getContext(), BuscarActivity.class);
+            i.putExtra("productos", (Serializable) productos);
+            startForResult.launch(i);
+
+            mainActivity.setBarraCarga(View.GONE);
+        });
     }
 
     /**
@@ -120,15 +203,17 @@ public class TpvFragment extends Fragment {
     /**
      * Inicializar lista de lineas de venta
      */
-    private void initListaLineas() {
+    public void initListaLineas() {
         lineasVenta = new ArrayList<>();
-        tpvAdapter = new TpvAdapter(lineasVenta);
+        tpvAdapter = new TpvAdapter(this, lineasVenta);
         rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rv.setAdapter(tpvAdapter);
+        actualizarTotal();
     }
 
     /**
      * Manejar el código de barras escaneado
+     *
      * @param codigoBarras Código de barras
      */
     public void manejarCodigoBarras(String codigoBarras) {
@@ -143,6 +228,7 @@ public class TpvFragment extends Fragment {
 
     /**
      * Añade una nueva linea de venta o aumenta en 1 su cantidad si ya existe
+     *
      * @param producto Producto de la linea de venta
      */
     private void addLineaVenta(Producto producto) {
@@ -185,4 +271,14 @@ public class TpvFragment extends Fragment {
         mainActivity.setBarraCarga(estado);
     }
 
+    /**
+     * Actualiza el total de la venta
+     */
+    public void actualizarTotal() {
+        Double total = lineasVenta.stream()
+                .mapToDouble(Linea::getPrecio)
+                .sum();
+
+        txtTotal.setText(Util.formatearDouble(total) + "€");
+    }
 }

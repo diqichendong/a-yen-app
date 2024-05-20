@@ -3,6 +3,7 @@ package com.example.ayenapp.servicio;
 import androidx.activity.result.ActivityResultLauncher;
 
 import com.example.ayenapp.R;
+import com.example.ayenapp.vista.BuscarActivity;
 import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
 import com.example.ayenapp.vista.TpvFragment;
@@ -14,6 +15,7 @@ public class EscanerService {
     private GuardarProductoActivity guardarProductoActivity;
     private ProductosFragment productosFragment;
     private TpvFragment tpvFragment;
+    private BuscarActivity buscarActivity;
     private ActivityResultLauncher<ScanOptions> scannerActivityLauncher;
 
     public EscanerService(GuardarProductoActivity activity) {
@@ -47,6 +49,18 @@ public class EscanerService {
                 result -> {
                     if (result.getContents() != null) {
                         fragment.manejarCodigoBarras(result.getContents());
+                    }
+                }
+        );
+    }
+
+    public EscanerService(BuscarActivity buscarActivity) {
+        this.buscarActivity = buscarActivity;
+        scannerActivityLauncher = buscarActivity.registerForActivityResult(
+                new ScanContract(),
+                result -> {
+                    if (result.getContents() != null) {
+                        buscarActivity.setCodigoBarras(result.getContents());
                     }
                 }
         );

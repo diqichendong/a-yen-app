@@ -15,14 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Linea;
 import com.example.ayenapp.util.Util;
+import com.example.ayenapp.vista.TpvFragment;
 
 import java.util.List;
 
 public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
 
     private List<Linea> datalist;
+    private TpvFragment tpvFragment;
 
-    public TpvAdapter(List<Linea> datalist) {
+    public TpvAdapter(TpvFragment tpvFragment, List<Linea> datalist) {
+        this.tpvFragment = tpvFragment;
         this.datalist = datalist;
     }
 
@@ -54,13 +57,19 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!s.toString().trim().isEmpty()) {
-                    Integer cantidad = new Integer(s.toString());
-                    linea.setCantidad(cantidad);
-                    linea.setPrecio(cantidad * linea.getProducto().getPrecio());
-                    holder.txtPrecio.setText(Util.formatearDouble(linea.getPrecio()) + "€");
+                    if (s.toString().trim().equals("0")) {
+                        borrarLinea(linea);
+                    } else {
+                        Integer cantidad = new Integer(s.toString());
+                        linea.setCantidad(cantidad);
+                        linea.setPrecio(cantidad * linea.getProducto().getPrecio());
+                        holder.txtPrecio.setText(Util.formatearDouble(linea.getPrecio()) + "€");
+                    }
                 } else {
                     holder.txtPrecio.setText("");
                 }
+
+                tpvFragment.actualizarTotal();
             }
         });
     }
@@ -93,6 +102,7 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
 
     public void setDatalist(List<Linea> datalist) {
         this.datalist = datalist;
+        tpvFragment.actualizarTotal();
         notifyDataSetChanged();
     }
 
@@ -103,6 +113,7 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
      */
     private void borrarLinea(Linea linea) {
         this.datalist.remove(linea);
+        tpvFragment.actualizarTotal();
         notifyDataSetChanged();
     }
 
@@ -118,6 +129,7 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
         } else {
             linea.setCantidad(nuevaCantidad);
             linea.setPrecio(nuevaCantidad * linea.getProducto().getPrecio());
+            tpvFragment.actualizarTotal();
             notifyDataSetChanged();
         }
     }
@@ -131,6 +143,7 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
         Integer nuevaCantidad = linea.getCantidad() + 1;
         linea.setCantidad(nuevaCantidad);
         linea.setPrecio(nuevaCantidad * linea.getProducto().getPrecio());
+        tpvFragment.actualizarTotal();
         notifyDataSetChanged();
     }
 

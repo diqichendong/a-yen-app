@@ -15,6 +15,7 @@ import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
 import com.example.ayenapp.vista.TpvFragment;
 import com.example.ayenapp.vista.adaptadores.ProductosAdapter;
+import com.example.ayenapp.vista.adaptadores.BuscarAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +30,6 @@ import java.util.List;
 public class ProductoService {
 
     private static String NODO_BASE = "productos";
-    private static final String LOCAL_URI_PREFIX = "content://";
 
     private Context context;
     private GuardarProductoActivity guardarProductoActivity;
@@ -52,8 +52,13 @@ public class ProductoService {
         this.context = tpvFragment.getContext();
     }
 
-    public ProductoService(ProductosAdapter adapter) {
+    public ProductoService(ProductosAdapter adapter, Context context) {
         this.productosAdapter = adapter;
+        this.context = context;
+    }
+
+    public ProductoService(Context context) {
+        this.context = context;
     }
 
     /**
