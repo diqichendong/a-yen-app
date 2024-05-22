@@ -10,12 +10,15 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.example.ayenapp.R;
+import com.example.ayenapp.modelo.Linea;
 import com.example.ayenapp.modelo.Producto;
+import com.example.ayenapp.modelo.Venta;
 import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
 import com.example.ayenapp.vista.TpvFragment;
 import com.example.ayenapp.vista.adaptadores.ProductosAdapter;
-import com.example.ayenapp.vista.adaptadores.BuscarAdapter;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +32,7 @@ import java.util.List;
 
 public class ProductoService {
 
-    private static String NODO_BASE = "productos";
+    private static final String NODO_BASE = "productos";
 
     private Context context;
     private GuardarProductoActivity guardarProductoActivity;
@@ -69,46 +72,27 @@ public class ProductoService {
      */
     public void guardarProducto(Producto producto, Uri uri) {
         guardarProductoActivity.setBarraCarga(View.VISIBLE);
+
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(NODO_BASE);
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
+        List<Task<Void>> tareas = new ArrayList<>();
+
         if (uri != null) {  // Si hay cambio de foto
-            // Guardar foto producto
-            storageRef.child(producto.getFoto()).putFile(uri).addOnSuccessListener(taskSnapshot -> {
-                // Guardar producto
-                databaseRef.child(producto.getCodigo()).setValue(producto).addOnSuccessListener(unused -> {
-                    exitoGuardar();
-                }).addOnFailureListener(e -> {
-                    falloGuardar();
-                });
-            }).addOnFailureListener(e -> {
-                falloGuardar();
-            });
+            tareas.add(storageRef.child(producto.getFoto()).putFile(uri).continueWithTask(task -> Tasks.forResult(null)));
+            tareas.add(databaseRef.child(producto.getCodigo()).setValue(producto));
         } else {    // No hay cambio de foto
-            // Guardar producto
-            databaseRef.child(producto.getCodigo()).setValue(producto).addOnSuccessListener(unused -> {
-                exitoGuardar();
-            }).addOnFailureListener(e -> {
-                falloGuardar();
-            });
+            tareas.add(databaseRef.child(producto.getCodigo()).setValue(producto));
         }
-    }
 
-    /**
-     * Procedimiento al guardar con éxito un producto
-     */
-    private void exitoGuardar() {
-        Toast.makeText(guardarProductoActivity, guardarProductoActivity.getString(R.string.exitoGuardarProducto), Toast.LENGTH_SHORT).show();
-        guardarProductoActivity.setBarraCarga(View.GONE);
-        guardarProductoActivity.finish();
-    }
-
-    /**
-     * Procedimiento al fallar en guardar un producto
-     */
-    private void falloGuardar() {
-        Toast.makeText(guardarProductoActivity, guardarProductoActivity.getString(R.string.falloGuardarProducto), Toast.LENGTH_SHORT).show();
-        guardarProductoActivity.setBarraCarga(View.GONE);
+        Tasks.whenAll(tareas).addOnSuccessListener(unused -> {
+            Toast.makeText(guardarProductoActivity, guardarProductoActivity.getString(R.string.exitoGuardarProducto), Toast.LENGTH_SHORT).show();
+            guardarProductoActivity.finish();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(guardarProductoActivity, guardarProductoActivity.getString(R.string.falloGuardarProducto), Toast.LENGTH_SHORT).show();
+        }).addOnCompleteListener(task -> {
+            guardarProductoActivity.setBarraCarga(View.GONE);
+        });
     }
 
     /**
@@ -118,15 +102,12 @@ public class ProductoService {
      * @param imageView ImageView que actualizaremos
      */
     public void loadFoto(Producto producto, ImageView imageView) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child(producto.getFoto());
-        storageRef.getDownloadUrl()
-                .addOnSuccessListener(uri -> {
-                    Glide.with(imageView).load(uri).into(imageView);
-                })
-                .addOnFailureListener(exception -> {
-                    Toast.makeText(context, context.getString(R.string.falloCargarImagen), Toast.LENGTH_SHORT).show();
-                });
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        storageRef.child(producto.getFoto()).getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(imageView).load(uri).into(imageView);
+        }).addOnFailureListener(exception -> {
+            Toast.makeText(context, context.getString(R.string.falloCargarImagen), Toast.LENGTH_SHORT).show();
+        });
     }
 
     /**
@@ -171,13 +152,7 @@ public class ProductoService {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Producto fragment
-                if (productosFragment != null) {
-                    Toast.makeText(context, context.getString(R.string.falloCargarProductos), Toast.LENGTH_SHORT).show();
-                }
-
-                // Tpv fragment
-                if (tpvFragment != null) {
+                if (productosFragment != null || tpvFragment != null) {
                     Toast.makeText(context, context.getString(R.string.falloCargarProductos), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -191,19 +166,45 @@ public class ProductoService {
      * @param producto Producto a eliminar
      */
     public void eliminarProducto(Context context, Producto producto) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference productoRef = database.getReference(NODO_BASE).child(producto.getCodigo());
-        productoRef.removeValue().addOnSuccessListener(unused -> {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference productoStorageRef = storage.getReference().child(producto.getFoto());
-            productoStorageRef.delete().addOnSuccessListener(unused1 -> {
-                productosAdapter.borrarProducto(producto);
-                Toast.makeText(context, context.getString(R.string.exitoEliminarProducto), Toast.LENGTH_SHORT).show();
-            }).addOnFailureListener(e -> {
-                Toast.makeText(context, context.getString(R.string.falloEliminarProducto), Toast.LENGTH_SHORT).show();
-            });
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(NODO_BASE);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+        List<Task<Void>> tareas = new ArrayList<>();
+
+        tareas.add(databaseRef.child(producto.getCodigo()).removeValue());
+        tareas.add(storageRef.child(producto.getFoto()).delete());
+
+        Tasks.whenAll(tareas).addOnSuccessListener(unused -> {
+            productosAdapter.borrarProducto(producto);
+            Toast.makeText(context, context.getString(R.string.exitoEliminarProducto), Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
             Toast.makeText(context, context.getString(R.string.falloEliminarProducto), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    /**
+     * Actualiza el stock de los productos al realizar una venta
+     *
+     * @param venta Venta realizada
+     */
+    public void actualizarStock(Venta venta) {
+        tpvFragment.setBarraCarga(View.VISIBLE);
+
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(NODO_BASE);
+
+        List<Linea> lineas = venta.getLineasVenta();
+        List<Task<Void>> tareas = new ArrayList<>();
+
+        lineas.forEach(linea -> {
+            Integer actualStock = linea.getProducto().getStock();
+            Integer nuevoStock = Math.max(actualStock - linea.getCantidad(), 0);
+            Task<Void> tarea = databaseRef.child(linea.getProducto().getCodigo() + "/stock")
+                    .setValue(nuevoStock);
+            tareas.add(tarea);
+        });
+
+        Tasks.whenAll(tareas).addOnSuccessListener(task -> {
+            tpvFragment.setBarraCarga(View.GONE);
         });
     }
 

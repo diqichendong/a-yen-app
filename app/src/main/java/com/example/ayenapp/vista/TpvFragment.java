@@ -140,6 +140,7 @@ public class TpvFragment extends Fragment {
                 lineasVenta.stream().mapToDouble(Linea::getPrecio).sum()
         );
         ventaService.guardarVenta(venta);
+        productoService.actualizarStock(venta);
     }
 
     /**

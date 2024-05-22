@@ -34,8 +34,6 @@ import java.util.List;
 
 public class BuscarActivity extends AppCompatActivity {
 
-    private static final int ADD_RESULT_CODE = 999;
-
     private EditText txtBuscar;
     private ImageButton btnEscaner;
     private RecyclerView rv;

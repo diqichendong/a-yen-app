@@ -165,7 +165,7 @@ public class GuardarProductoActivity extends AppCompatActivity {
      * Inicializa el botón de crear
      */
     private void initCrear() {
-        Button btnCrear = findViewById(R.id.btnCrear);
+        Button btnCrear = findViewById(R.id.btnGuardar);
         btnCrear.setOnClickListener(v -> guardarProducto());
     }
 
