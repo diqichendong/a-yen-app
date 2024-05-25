@@ -22,9 +22,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ProductosFragment productosFragment;
-    private TpvFragment tpvFragment;
-
     private BottomNavigationView bottomNav;
     private ProgressBar barraCarga;
 
@@ -42,17 +39,16 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-
+    /**
+     * Inicializar componentes de la vista
+     */
     private void init() {
-        productosFragment = new ProductosFragment();
-        tpvFragment = new TpvFragment();
-
         bottomNav = findViewById(R.id.bottomNav);
         barraCarga = findViewById(R.id.barraCarga);
 
         initBottomNav();
 
-        cargarFragment(tpvFragment);
+        cargarFragment(new TpvFragment());
     }
 
     /**
@@ -68,18 +64,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Inicializar el menú de navegación
+     */
     private void initBottomNav() {
         bottomNav.setOnItemSelectedListener(menuItem -> {
             if (menuItem.getItemId() == R.id.bottomNavTpv) {
-                cargarFragment(tpvFragment);
+                cargarFragment(new TpvFragment());
             }
             if (menuItem.getItemId() == R.id.bottomNavProductos) {
-                cargarFragment(productosFragment);
+                cargarFragment(new ProductosFragment());
+            }
+            if (menuItem.getItemId() == R.id.bottomNavListaCompra) {
+                cargarFragment(new CompraFragment());
             }
             return true;
         });
     }
 
+    /**
+     * Carga un fragment en pantalla
+     *
+     * @param fragment
+     */
     private void cargarFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);

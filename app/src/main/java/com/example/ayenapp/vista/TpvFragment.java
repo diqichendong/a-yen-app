@@ -96,7 +96,6 @@ public class TpvFragment extends Fragment {
 
         productoService.getProductos();
 
-
         initListaLineas();
         initEscaner();
         initCancelar();
@@ -140,7 +139,7 @@ public class TpvFragment extends Fragment {
                 lineasVenta.stream().mapToDouble(Linea::getPrecio).sum()
         );
         ventaService.guardarVenta(venta);
-        productoService.actualizarStock(venta);
+        productoService.actualizarStock(lineasVenta);
     }
 
     /**
@@ -234,7 +233,7 @@ public class TpvFragment extends Fragment {
      */
     private void addLineaVenta(Producto producto) {
         if (producto != null) {
-            Linea nuevaLinea = new Linea(producto, producto.getPrecio());
+            Linea nuevaLinea = new Linea(producto, 1, producto.getPrecio());
             if (lineasVenta.contains(nuevaLinea)) {
                 Linea lineaAntigua = lineasVenta
                         .stream()

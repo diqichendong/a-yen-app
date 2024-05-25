@@ -8,11 +8,12 @@ import java.util.Objects;
 public class Linea implements Serializable {
 
     private Producto producto;
-    private Integer cantidad = 1;
+    private Integer cantidad;
     private Double precio;
 
-    public Linea(Producto producto, Double precio) {
+    public Linea(Producto producto, Integer cantidad, Double precio) {
         this.producto = producto;
+        this.cantidad = cantidad;
         this.precio = precio;
     }
 

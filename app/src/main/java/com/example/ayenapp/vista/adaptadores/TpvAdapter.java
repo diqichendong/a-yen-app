@@ -66,7 +66,9 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
                         holder.txtPrecio.setText(Util.formatearDouble(linea.getPrecio()) + "€");
                     }
                 } else {
-                    holder.txtPrecio.setText("");
+                    holder.txtCantidad.setText("1");
+                    holder.txtCantidad.selectAll();
+                    holder.txtPrecio.setText(Util.formatearDouble(linea.getProducto().getPrecio()) + "€");
                 }
 
                 tpvFragment.actualizarTotal();

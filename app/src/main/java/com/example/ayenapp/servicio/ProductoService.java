@@ -13,6 +13,7 @@ import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Linea;
 import com.example.ayenapp.modelo.Producto;
 import com.example.ayenapp.modelo.Venta;
+import com.example.ayenapp.vista.CompraFragment;
 import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
 import com.example.ayenapp.vista.TpvFragment;
@@ -39,6 +40,7 @@ public class ProductoService {
     private ProductosFragment productosFragment;
     private TpvFragment tpvFragment;
     private ProductosAdapter productosAdapter;
+    private CompraFragment compraFragment;
 
     public ProductoService(GuardarProductoActivity activity) {
         this.guardarProductoActivity = activity;
@@ -62,6 +64,11 @@ public class ProductoService {
 
     public ProductoService(Context context) {
         this.context = context;
+    }
+
+    public ProductoService(CompraFragment compraFragment) {
+        this.compraFragment = compraFragment;
+        this.context = compraFragment.getContext();
     }
 
     /**
@@ -119,9 +126,11 @@ public class ProductoService {
         if (productosFragment != null) {
             productosFragment.setBarraCarga(View.VISIBLE);
         }
-
         if (tpvFragment != null) {
             tpvFragment.setBarraCarga(View.VISIBLE);
+        }
+        if (compraFragment != null) {
+            compraFragment.setBarraCarga(View.VISIBLE);
         }
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -136,23 +145,23 @@ public class ProductoService {
                     productos.add(producto);
                 }
 
-                // Producto fragment
                 if (productosFragment != null) {
                     productosFragment.setProductos(productos);
                     productosFragment.setBarraCarga(View.GONE);
                 }
-
-                // Tpv fragment
                 if (tpvFragment != null) {
                     tpvFragment.setProductos(productos);
                     tpvFragment.setBarraCarga(View.GONE);
                 }
-
+                if (compraFragment != null) {
+                    compraFragment.setProductos(productos);
+                    compraFragment.setBarraCarga(View.GONE);
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                if (productosFragment != null || tpvFragment != null) {
+                if (productosFragment != null || tpvFragment != null || compraFragment != null) {
                     Toast.makeText(context, context.getString(R.string.falloCargarProductos), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -185,27 +194,66 @@ public class ProductoService {
     /**
      * Actualiza el stock de los productos al realizar una venta
      *
-     * @param venta Venta realizada
+     * @param lineas Lineas del pedido
      */
-    public void actualizarStock(Venta venta) {
-        tpvFragment.setBarraCarga(View.VISIBLE);
+    public void actualizarStock(List<Linea> lineas) {
+        if (tpvFragment != null) {
+            tpvFragment.setBarraCarga(View.VISIBLE);
+        }
+        if (compraFragment != null) {
+            compraFragment.setBarraCarga(View.VISIBLE);
+        }
 
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(NODO_BASE);
 
-        List<Linea> lineas = venta.getLineasVenta();
         List<Task<Void>> tareas = new ArrayList<>();
 
         lineas.forEach(linea -> {
             Integer actualStock = linea.getProducto().getStock();
-            Integer nuevoStock = Math.max(actualStock - linea.getCantidad(), 0);
+            Integer nuevoStock = 0;
+
+            if (tpvFragment != null) {
+                nuevoStock = Math.max(actualStock - linea.getCantidad(), 0);
+            }
+            if (compraFragment != null) {
+                nuevoStock = linea.getCantidad() + linea.getProducto().getStock();
+            }
+
             Task<Void> tarea = databaseRef.child(linea.getProducto().getCodigo() + "/stock")
                     .setValue(nuevoStock);
             tareas.add(tarea);
         });
 
         Tasks.whenAll(tareas).addOnSuccessListener(task -> {
-            tpvFragment.setBarraCarga(View.GONE);
+            if (tpvFragment != null) {
+                tpvFragment.setBarraCarga(View.GONE);
+            }
+            if (compraFragment != null) {
+                compraFragment.setBarraCarga(View.GONE);
+            }
         });
     }
 
+    /**
+     * Actualiza el coste de los productos al realizar una compra
+     *
+     * @param lineas Lineas del pedido
+     */
+    public void actualizarCoste(List<Linea> lineas) {
+        compraFragment.setBarraCarga(View.VISIBLE);
+
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(NODO_BASE);
+
+        List<Task<Void>> tareas = new ArrayList<>();
+
+        lineas.forEach(linea -> {
+            Task<Void> tarea = databaseRef.child(linea.getProducto().getCodigo() + "/coste")
+                    .setValue(linea.getProducto().getCoste());
+            tareas.add(tarea);
+        });
+
+        Tasks.whenAll(tareas).addOnSuccessListener(task -> {
+            compraFragment.setBarraCarga(View.GONE);
+        });
+    }
 }

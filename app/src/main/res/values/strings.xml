@@ -68,6 +68,19 @@
     <string name="falloGuardarVenta">No se ha podido guardar la venta</string>
     <string name="dialogFinalizarVentaTitle">Finalizar venta</string>
     <string name="dialogFinalizarVentaMensaje">¿Estás seguro que quieres finalizar la venta?</string>
-    <string name="mensajeVentaVacia">No se se ha añadido ningún producto a la venta</string>
+    <string name="mensajeVentaVacia">No se ha añadido ningún producto a la venta</string>
+
+    <!-- Compra -->
+    <string name="btnFinalizarCompra">FINALIZAR</string>
+    <string name="btnReiniciarCompra">REINICIAR</string>
+    <string name="dialogReiniciarCompraTitulo">Reiniciar compra</string>
+    <string name="dialogReiniciarCompraMensaje">¿Estás seguro que quiere reiniciar la compra?</string>
+    <string name="dialogFinalizarCompraTitle">Finalizar compra</string>
+    <string name="dialogFinalizarCompraMensaje">¿Estás seguro que quieres finalizar la compra?</string>
+    <string name="mensajeCompraVacia">No se ha añadido ningún producto a la compra</string>
+    <string name="exitoGuardarCompra">Se ha guardado la compra con éxito</string>
+    <string name="falloGuardarCompra">No se ha podido guardar la compra</string>
+    <string name="txtCantidadLineaCompra">Cantidad</string>
+    <string name="txtCosteLineaCompra">Coste</string>
 
 </resources>
