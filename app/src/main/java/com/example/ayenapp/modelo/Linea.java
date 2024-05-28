@@ -11,6 +11,8 @@ public class Linea implements Serializable {
     private Integer cantidad;
     private Double precio;
 
+    public Linea() {}
+
     public Linea(Producto producto, Integer cantidad, Double precio) {
         this.producto = producto;
         this.cantidad = cantidad;

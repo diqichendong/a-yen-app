@@ -83,4 +83,12 @@
     <string name="txtCantidadLineaCompra">Cantidad</string>
     <string name="txtCosteLineaCompra">Coste</string>
 
+    <!-- Registros -->
+    <string name="tabVentas">Ventas</string>
+    <string name="tabCompras">Compras</string>
+    <string name="txtFechaInicio">Inicio</string>
+    <string name="txtFechaFin">Fin</string>
+    <string name="falloObtenerVentas">No ha sido posible obtener las ventas</string>
+    <string name="mensajeNoHayVentas">No hay ventas</string>
+
 </resources>

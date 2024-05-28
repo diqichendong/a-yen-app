@@ -11,13 +11,26 @@ public class Util {
         return formato.format(d).replace(",", ".");
     }
 
-    public static String crearCodigoVentaCompra(String fechaHora) {
-        return fechaHora.replaceAll("[/ :]", "");
+    public static String crearCodigoVentaCompra(LocalDateTime fecha) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        return fecha.format(formatter);
     }
 
-    public static String getFechaHoraActual() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return now.format(formatter);
+    public static String formatearFechaHora(LocalDateTime fecha) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        return fecha.format(formatter);
     }
+
+    public static String formatearFechaHora(String fechaHora) {
+        DateTimeFormatter formatoAntes = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        DateTimeFormatter formatoDespues = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        LocalDateTime fecha = LocalDateTime.parse(fechaHora, formatoAntes);
+        return formatoDespues.format(fecha);
+    }
+
+    public static String formatearFecha(LocalDateTime fecha) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return fecha.format(formatter);
+    }
+
 }

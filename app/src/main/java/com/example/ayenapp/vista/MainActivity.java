@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
             if (menuItem.getItemId() == R.id.bottomNavListaCompra) {
                 cargarFragment(new CompraFragment());
             }
+            if (menuItem.getItemId() == R.id.bottomNavRegistros) {
+                cargarFragment(new RegistrosFragment());
+            }
             return true;
         });
     }

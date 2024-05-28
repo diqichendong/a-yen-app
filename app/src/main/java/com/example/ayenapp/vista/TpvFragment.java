@@ -34,6 +34,7 @@ import com.example.ayenapp.util.Util;
 import com.example.ayenapp.vista.adaptadores.TpvAdapter;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,10 +132,10 @@ public class TpvFragment extends Fragment {
      * Crear la venta y guardarla
      */
     private void finalizarVenta() {
-        String fecha = Util.getFechaHoraActual();
+        LocalDateTime fechaActual = LocalDateTime.now();
         Venta venta = new Venta(
-                Util.crearCodigoVentaCompra(fecha),
-                fecha,
+                Util.crearCodigoVentaCompra(fechaActual),
+                Util.formatearFechaHora(fechaActual),
                 lineasVenta,
                 lineasVenta.stream().mapToDouble(Linea::getPrecio).sum()
         );

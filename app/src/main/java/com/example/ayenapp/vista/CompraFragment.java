@@ -36,6 +36,7 @@ import com.example.ayenapp.vista.adaptadores.CompraAdapter;
 import com.example.ayenapp.vista.adaptadores.TpvAdapter;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -120,10 +121,10 @@ public class CompraFragment extends Fragment {
      * Crear la compra y guardarla
      */
     private void finalizarCompra() {
-        String fecha = Util.getFechaHoraActual();
+        LocalDateTime fechaActual = LocalDateTime.now();
         Compra compra = new Compra(
-                Util.crearCodigoVentaCompra(fecha),
-                fecha,
+                Util.crearCodigoVentaCompra(fechaActual),
+                Util.formatearFechaHora(fechaActual),
                 lineasCompra,
                 lineasCompra.stream().mapToDouble(Linea::getPrecio).sum()
         );
@@ -186,7 +187,6 @@ public class CompraFragment extends Fragment {
                 .map(p -> new Linea(p, 0, 0.0))
                 .collect(Collectors.toList());
 
-        Log.d("aaaaaaaaaaaaaaaaaa", lineasCompra.toString());
         compraAdapter = new CompraAdapter(this, lineasCompra);
         rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rv.setAdapter(compraAdapter);

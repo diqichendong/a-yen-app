@@ -13,6 +13,8 @@ public class Compra implements Serializable {
     private List<Linea> lineasCompra;
     private Double total;
 
+    public Compra() {}
+
     public Compra(String codigo, String fecha, List<Linea> lineasVenta, Double total) {
         this.codigo = codigo;
         this.fecha = fecha;

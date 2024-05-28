@@ -14,6 +14,8 @@ public class Venta implements Serializable {
     private List<Linea> lineasVenta;
     private Double total;
 
+    public Venta() {}
+
     public Venta(String codigo, String fecha, List<Linea> lineasVenta, Double total) {
         this.codigo = codigo;
         this.fecha = fecha;
