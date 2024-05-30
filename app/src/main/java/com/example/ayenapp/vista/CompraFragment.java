@@ -50,7 +50,7 @@ public class CompraFragment extends Fragment {
     private View view;
     private Button btnFinalizar, btnReiniciar, btnAdd;
     private RecyclerView rv;
-    private TextView txtTotal;
+    private TextView txtTotal, txtListaVacia;
 
     private CompraService compraService;
 
@@ -81,6 +81,7 @@ public class CompraFragment extends Fragment {
         btnAdd = view.findViewById(R.id.btnAddCompra);
         rv = view.findViewById(R.id.rvCompra);
         txtTotal = view.findViewById(R.id.txtTotalCompra);
+        txtListaVacia = view.findViewById(R.id.txtListaCompraVacia);
 
         productoService = new ProductoService(this);
         compraService = new CompraService(this);
@@ -123,7 +124,7 @@ public class CompraFragment extends Fragment {
     private void finalizarCompra() {
         LocalDateTime fechaActual = LocalDateTime.now();
         Compra compra = new Compra(
-                Util.crearCodigoVentaCompra(fechaActual),
+                "C-" + Util.crearCodigoVentaCompra(fechaActual),
                 Util.formatearFechaHora(fechaActual),
                 lineasCompra,
                 lineasCompra.stream().mapToDouble(Linea::getPrecio).sum()
@@ -205,7 +206,8 @@ public class CompraFragment extends Fragment {
                 lineasCompra.add(nuevaLinea);
             }
 
-            compraAdapter.setDatalist(lineasCompra);
+            compraAdapter.notifyDataSetChanged();
+            comprobarListaVacia(lineasCompra);
         }
     }
 
@@ -236,5 +238,17 @@ public class CompraFragment extends Fragment {
                 .sum();
 
         txtTotal.setText(Util.formatearDouble(total) + "€");
+        comprobarListaVacia(lineasCompra);
+    }
+
+    /**
+     * Comprobar el tamaño de la lista para mostrar mensaje
+     */
+    private void comprobarListaVacia(List<Linea> lista) {
+        if (lista.isEmpty()) {
+            txtListaVacia.setVisibility(View.VISIBLE);
+        } else {
+            txtListaVacia.setVisibility(View.GONE);
+        }
     }
 }

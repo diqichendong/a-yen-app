@@ -49,8 +49,8 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
         holder.txtCantidad.setText(linea.getCantidad().toString());
         holder.txtCoste.setText(Util.formatearDouble(linea.getProducto().getCoste()));
         holder.btnBorrar.setOnClickListener(v -> borrarLinea(linea));
-        holder.btnMenos.setOnClickListener(v -> botonMenos(linea));
-        holder.btnMas.setOnClickListener(v -> botonMas(linea));
+        holder.btnMenos.setOnClickListener(v -> holder.txtCantidad.setText("" + (linea.getCantidad() - 1)));
+        holder.btnMas.setOnClickListener(v -> holder.txtCantidad.setText("" + (linea.getCantidad() + 1)));
         productoService.loadFoto(linea.getProducto(), holder.imgProducto);
 
         initCantidadListener(holder, linea);
@@ -95,32 +95,6 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
      */
     private void borrarLinea(Linea linea) {
         this.datalist.remove(linea);
-        compraFragment.actualizarTotal();
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Disminuye en 1 la cantidad de la linea o la borra si es menor o igual a 0
-     *
-     * @param linea Linea de venta
-     */
-    private void botonMenos(Linea linea) {
-        Integer nuevaCantidad = Math.max(linea.getCantidad() - 1, 0);
-        linea.setCantidad(nuevaCantidad);
-        linea.setPrecio(nuevaCantidad * linea.getProducto().getCoste());
-        compraFragment.actualizarTotal();
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Aumenta en 1 la cantidad de la linea
-     *
-     * @param linea Linea de venta
-     */
-    private void botonMas(Linea linea) {
-        Integer nuevaCantidad = linea.getCantidad() + 1;
-        linea.setCantidad(nuevaCantidad);
-        linea.setPrecio(nuevaCantidad * linea.getProducto().getCoste());
         compraFragment.actualizarTotal();
         notifyDataSetChanged();
     }

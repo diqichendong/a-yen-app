@@ -48,7 +48,7 @@ public class TpvFragment extends Fragment {
     private View view;
     private Button btnFinalizar, btnCancelar, btnBuscar, btnEscanear;
     private RecyclerView rv;
-    private TextView txtTotal;
+    private TextView txtTotal, txtListaVacia;
 
     private VentaService ventaService;
 
@@ -90,6 +90,7 @@ public class TpvFragment extends Fragment {
         btnBuscar = view.findViewById(R.id.btnBuscarVenta);
         rv = view.findViewById(R.id.rvVenta);
         txtTotal = view.findViewById(R.id.txtTotalVenta);
+        txtListaVacia = view.findViewById(R.id.txtListaVentaVacia);
 
         escanerService = new EscanerService(this);
         productoService = new ProductoService(this);
@@ -134,7 +135,7 @@ public class TpvFragment extends Fragment {
     private void finalizarVenta() {
         LocalDateTime fechaActual = LocalDateTime.now();
         Venta venta = new Venta(
-                Util.crearCodigoVentaCompra(fechaActual),
+                "V-" + Util.crearCodigoVentaCompra(fechaActual),
                 Util.formatearFechaHora(fechaActual),
                 lineasVenta,
                 lineasVenta.stream().mapToDouble(Linea::getPrecio).sum()
@@ -249,7 +250,8 @@ public class TpvFragment extends Fragment {
                 lineasVenta.add(nuevaLinea);
             }
 
-            tpvAdapter.setDatalist(lineasVenta);
+            tpvAdapter.notifyDataSetChanged();
+            comprobarListaVacia(lineasVenta);
         } else {
             if (toast != null) {
                 toast.cancel();
@@ -281,5 +283,17 @@ public class TpvFragment extends Fragment {
                 .sum();
 
         txtTotal.setText(Util.formatearDouble(total) + "€");
+        comprobarListaVacia(lineasVenta);
+    }
+
+    /**
+     * Comprobar el tamaño de la lista para mostrar mensaje
+     */
+    private void comprobarListaVacia(List<Linea> lista) {
+        if (lista.isEmpty()) {
+            txtListaVacia.setVisibility(View.VISIBLE);
+        } else {
+            txtListaVacia.setVisibility(View.GONE);
+        }
     }
 }

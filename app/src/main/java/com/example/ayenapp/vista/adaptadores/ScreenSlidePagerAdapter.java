@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.ayenapp.vista.RegistroComprasFragment;
 import com.example.ayenapp.vista.RegistroVentasFragment;
 
 public class ScreenSlidePagerAdapter extends FragmentStateAdapter {
@@ -23,6 +24,7 @@ public class ScreenSlidePagerAdapter extends FragmentStateAdapter {
                 fragment = new RegistroVentasFragment();
                 break;
             case 1:
+                fragment = new RegistroComprasFragment();
                 break;
         }
 

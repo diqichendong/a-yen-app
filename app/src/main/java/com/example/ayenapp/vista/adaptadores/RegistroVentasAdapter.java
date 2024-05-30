@@ -1,5 +1,6 @@
 package com.example.ayenapp.vista.adaptadores;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Venta;
 import com.example.ayenapp.util.Util;
+import com.example.ayenapp.vista.RegistroActivity;
+import com.example.ayenapp.vista.RegistroVentasFragment;
 
 import java.util.List;
 
 public class RegistroVentasAdapter extends RecyclerView.Adapter<RegistroVentasAdapter.RegistroVentasViewHolder> {
 
     private List<Venta> dataset;
+    private RegistroVentasFragment registroVentasFragment;
 
-    public RegistroVentasAdapter(List<Venta> dataset) {
+    public RegistroVentasAdapter(RegistroVentasFragment registroVentasFragment, List<Venta> dataset) {
         this.dataset = dataset;
+        this.registroVentasFragment = registroVentasFragment;
     }
 
     @NonNull
@@ -38,6 +43,11 @@ public class RegistroVentasAdapter extends RecyclerView.Adapter<RegistroVentasAd
         holder.txtCodigo.setText(venta.getCodigo());
         holder.txtTotal.setText(Util.formatearDouble(venta.getTotal()) + "€");
 
+        holder.btnDetalles.setOnClickListener(v -> {
+            Intent i = new Intent(registroVentasFragment.getContext(), RegistroActivity.class);
+            i.putExtra("venta", venta);
+            registroVentasFragment.startActivity(i);
+        });
     }
 
     @Override

@@ -51,6 +51,7 @@
     <string name="mensajeCodigoNoEditable">El código no se puede modificar</string>
     <string name="keyProductoAntiguo">productoAntiguo</string>
     <string name="activityGuardarProductoTitle">Guardar producto</string>
+    <string name="mensajeNoHayProductos">No hay productos</string>
 
     <!-- TPV -->
     <string name="txtCantidadLineaVenta">Cantidad:</string>
@@ -69,6 +70,7 @@
     <string name="dialogFinalizarVentaTitle">Finalizar venta</string>
     <string name="dialogFinalizarVentaMensaje">¿Estás seguro que quieres finalizar la venta?</string>
     <string name="mensajeVentaVacia">No se ha añadido ningún producto a la venta</string>
+    <string name="mensajeListaVentaVacia">Añade productos a la venta</string>
 
     <!-- Compra -->
     <string name="btnFinalizarCompra">FINALIZAR</string>
@@ -82,6 +84,7 @@
     <string name="falloGuardarCompra">No se ha podido guardar la compra</string>
     <string name="txtCantidadLineaCompra">Cantidad</string>
     <string name="txtCosteLineaCompra">Coste</string>
+    <string name="mensajeListaCompraVacia">Lista de la compra vacía</string>
 
     <!-- Registros -->
     <string name="tabVentas">Ventas</string>
@@ -90,5 +93,10 @@
     <string name="txtFechaFin">Fin</string>
     <string name="falloObtenerVentas">No ha sido posible obtener las ventas</string>
     <string name="mensajeNoHayVentas">No hay ventas</string>
+    <string name="mensajeNoHayCompras">No hay compras</string>
+    <string name="falloObtenerCompras">No ha sido posible obtener las compras</string>
+    <string name="txtCodigoRegistro">Código:</string>
+    <string name="txtFechaRegistro">Fecha:</string>
+    <string name="activityRegistroTitle">Detalles</string>
 
 </resources>

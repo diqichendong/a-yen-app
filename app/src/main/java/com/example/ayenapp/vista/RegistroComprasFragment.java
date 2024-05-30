@@ -14,35 +14,38 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ayenapp.R;
+import com.example.ayenapp.modelo.Compra;
 import com.example.ayenapp.modelo.Venta;
+import com.example.ayenapp.servicio.CompraService;
 import com.example.ayenapp.servicio.VentaService;
 import com.example.ayenapp.util.Util;
+import com.example.ayenapp.vista.adaptadores.RegistroComprasAdapter;
 import com.example.ayenapp.vista.adaptadores.RegistroVentasAdapter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegistroVentasFragment extends Fragment {
+public class RegistroComprasFragment extends Fragment {
 
     private MainActivity mainActivity;
 
     private View view;
     private RecyclerView rv;
     private EditText fechaInicio, fechaFin;
-    private TextView txtNoHayVentas;
+    private TextView txtNoHayCompras;
 
-    private VentaService ventaService;
+    private CompraService compraService;
 
-    private List<Venta> ventas;
-    private RegistroVentasAdapter registroVentasAdapter;
+    private List<Compra> compras;
+    private RegistroComprasAdapter registroComprasAdapter;
     private LocalDateTime fechaInicioSeleccionada;
     private LocalDateTime fechaFinSeleccionada;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_registro_ventas, container, false);
+        view = inflater.inflate(R.layout.fragment_registro_compras, container, false);
 
         init();
 
@@ -55,16 +58,16 @@ public class RegistroVentasFragment extends Fragment {
     private void init() {
         mainActivity = (MainActivity) getActivity();
 
-        rv = view.findViewById(R.id.rvRegistroVentas);
-        fechaInicio = view.findViewById(R.id.fechaInicioVentas);
-        fechaFin = view.findViewById(R.id.fechaFinVentas);
-        txtNoHayVentas = view.findViewById(R.id.txtNoHayVentas);
+        rv = view.findViewById(R.id.rvRegistroCompras);
+        fechaInicio = view.findViewById(R.id.fechaInicioCompras);
+        fechaFin = view.findViewById(R.id.fechaFinCompras);
+        txtNoHayCompras = view.findViewById(R.id.txtNoHayCompras);
 
-        ventaService = new VentaService(this);
+        compraService = new CompraService(this);
 
         fechaInicioSeleccionada = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         fechaFinSeleccionada = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
-        ventaService.getVentas(fechaInicioSeleccionada, fechaFinSeleccionada);
+        compraService.getCompras(fechaInicioSeleccionada, fechaFinSeleccionada);
 
         initFechaInicio();
         initFechaFin();
@@ -72,13 +75,13 @@ public class RegistroVentasFragment extends Fragment {
     }
 
     /**
-     * Inicializar lista de ventas
+     * Inicializar lista de compras
      */
     private void initListaVentas() {
-        ventas = new ArrayList<>();
-        registroVentasAdapter = new RegistroVentasAdapter(this, ventas);
+        compras = new ArrayList<>();
+        registroComprasAdapter = new RegistroComprasAdapter(this, compras);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(registroVentasAdapter);
+        rv.setAdapter(registroComprasAdapter);
     }
 
     /**
@@ -99,7 +102,7 @@ public class RegistroVentasFragment extends Fragment {
                     fechaFin.setText(Util.formatearFecha(fechaFinSeleccionada));
                 }
                 fechaInicio.setText(Util.formatearFecha(fechaInicioSeleccionada));
-                ventaService.getVentas(fechaInicioSeleccionada, fechaFinSeleccionada);
+                compraService.getCompras(fechaInicioSeleccionada, fechaFinSeleccionada);
             }, anyo, mes, dia).show();
         });
     }
@@ -122,7 +125,7 @@ public class RegistroVentasFragment extends Fragment {
                     fechaInicio.setText(Util.formatearFecha(fechaInicioSeleccionada));
                 }
                 fechaFin.setText(Util.formatearFecha(fechaFinSeleccionada));
-                ventaService.getVentas(fechaInicioSeleccionada, fechaFinSeleccionada);
+                compraService.getCompras(fechaInicioSeleccionada, fechaFinSeleccionada);
             }, anyo, mes, dia).show();
         });
     }
@@ -137,18 +140,18 @@ public class RegistroVentasFragment extends Fragment {
     }
 
     /**
-     * Establece la nuevo registro de ventas
+     * Establece la nuevo registro de compras
      *
-     * @param ventas Lista de registro de ventas
+     * @param compras Lista de registro de compras
      */
-    public void setVentas(List<Venta> ventas) {
-        this.ventas = ventas;
-        registroVentasAdapter.setDataset(ventas);
+    public void setCompras(List<Compra> compras) {
+        this.compras = compras;
+        registroComprasAdapter.setDataset(compras);
 
-        if (ventas.isEmpty()) {
-            txtNoHayVentas.setVisibility(View.VISIBLE);
+        if (compras.isEmpty()) {
+            txtNoHayCompras.setVisibility(View.VISIBLE);
         } else {
-            txtNoHayVentas.setVisibility(View.GONE);
+            txtNoHayCompras.setVisibility(View.GONE);
         }
     }
 }

@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Producto;
@@ -37,6 +38,7 @@ public class ProductosFragment extends Fragment {
     private View view;
     private RecyclerView rv;
     private EditText txtBuscar;
+    private TextView txtNoHayProductos;
 
     private EscanerService escanerService;
     private ProductoService productoService;
@@ -75,6 +77,7 @@ public class ProductosFragment extends Fragment {
 
         rv = view.findViewById(R.id.rvProductos);
         txtBuscar = view.findViewById(R.id.txtBuscar);
+        txtNoHayProductos = view.findViewById(R.id.txtNoHayProductos);
 
         initCrearProducto();
         initListaProductos();
@@ -155,6 +158,7 @@ public class ProductosFragment extends Fragment {
     public void setProductos(List<Producto> productos) {
         this.productos = productos;
         productosAdapter.setDatalist(productos);
+        comprobarListaVacia(productos);
     }
 
     /**
@@ -175,6 +179,7 @@ public class ProductosFragment extends Fragment {
         }
 
         productosAdapter.setDatalist(listaFiltrada);
+        comprobarListaVacia(listaFiltrada);
     }
 
     /**
@@ -186,5 +191,16 @@ public class ProductosFragment extends Fragment {
     private boolean cumpleFiltro(Producto producto, String filtro) {
         return producto.getCodigo().toLowerCase().contains(filtro.toLowerCase())
                 || producto.getNombre().toLowerCase().contains(filtro.toLowerCase());
+    }
+
+    /**
+     * Comprobar el tamaño de la lista para mostrar mensaje
+     */
+    private void comprobarListaVacia(List<Producto> lista) {
+        if (lista.isEmpty()) {
+            txtNoHayProductos.setVisibility(View.VISIBLE);
+        } else {
+            txtNoHayProductos.setVisibility(View.GONE);
+        }
     }
 }

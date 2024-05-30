@@ -44,8 +44,8 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
         holder.txtPrecio.setText(Util.formatearDouble(linea.getPrecio()) + "€");
         holder.txtCantidad.setText(linea.getCantidad().toString());
         holder.btnBorrar.setOnClickListener(v -> borrarLinea(linea));
-        holder.btnMenos.setOnClickListener(v -> botonMenos(linea));
-        holder.btnMas.setOnClickListener(v -> botonMas(linea));
+        holder.btnMenos.setOnClickListener(v -> holder.txtCantidad.setText("" + (linea.getCantidad() - 1)));
+        holder.btnMas.setOnClickListener(v -> holder.txtCantidad.setText("" + (linea.getCantidad() + 1)));
 
         holder.txtCantidad.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,16 +98,6 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
         }
     }
 
-    public List<Linea> getDatalist() {
-        return this.datalist;
-    }
-
-    public void setDatalist(List<Linea> datalist) {
-        this.datalist = datalist;
-        tpvFragment.actualizarTotal();
-        notifyDataSetChanged();
-    }
-
     /**
      * Borrar una linea de venta
      *
@@ -115,36 +105,6 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
      */
     private void borrarLinea(Linea linea) {
         this.datalist.remove(linea);
-        tpvFragment.actualizarTotal();
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Disminuye en 1 la cantidad de la linea o la borra si es menor o igual a 0
-     *
-     * @param linea Linea de venta
-     */
-    private void botonMenos(Linea linea) {
-        Integer nuevaCantidad = linea.getCantidad() - 1;
-        if (nuevaCantidad <= 0) {
-            borrarLinea(linea);
-        } else {
-            linea.setCantidad(nuevaCantidad);
-            linea.setPrecio(nuevaCantidad * linea.getProducto().getPrecio());
-            tpvFragment.actualizarTotal();
-            notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Aumenta en 1 la cantidad de la linea
-     *
-     * @param linea Linea de venta
-     */
-    private void botonMas(Linea linea) {
-        Integer nuevaCantidad = linea.getCantidad() + 1;
-        linea.setCantidad(nuevaCantidad);
-        linea.setPrecio(nuevaCantidad * linea.getProducto().getPrecio());
         tpvFragment.actualizarTotal();
         notifyDataSetChanged();
     }

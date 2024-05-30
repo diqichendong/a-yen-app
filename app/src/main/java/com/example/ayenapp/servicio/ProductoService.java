@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide;
 import com.example.ayenapp.R;
 import com.example.ayenapp.modelo.Linea;
 import com.example.ayenapp.modelo.Producto;
-import com.example.ayenapp.modelo.Venta;
 import com.example.ayenapp.vista.CompraFragment;
 import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.ProductosFragment;
