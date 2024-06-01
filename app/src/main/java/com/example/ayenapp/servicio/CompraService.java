@@ -10,6 +10,7 @@ import com.example.ayenapp.modelo.Compra;
 import com.example.ayenapp.modelo.Venta;
 import com.example.ayenapp.util.Util;
 import com.example.ayenapp.vista.CompraFragment;
+import com.example.ayenapp.vista.GuardarProductoActivity;
 import com.example.ayenapp.vista.RegistroComprasFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +29,7 @@ public class CompraService {
 
     private CompraFragment compraFragment;
     private RegistroComprasFragment registroComprasFragment;
+    private GuardarProductoActivity guardarProductoActivity;
 
     public CompraService(CompraFragment compraFragment) {
         this.compraFragment = compraFragment;
@@ -37,23 +39,36 @@ public class CompraService {
         this.registroComprasFragment = registroComprasFragment;
     }
 
+    public CompraService(GuardarProductoActivity guardarProductoActivity) {
+        this.guardarProductoActivity = guardarProductoActivity;
+    }
+
     /**
      * Guarda la compra en los servicios de Firebase
      *
      * @param compra Venta a guardar
      */
     public void guardarCompra(Compra compra) {
-        compraFragment.setBarraCarga(View.VISIBLE);
+        if (compraFragment != null) {
+            compraFragment.setBarraCarga(View.VISIBLE);
+        }
 
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(NODO_BASE);
 
         databaseRef.child(compra.getCodigo()).setValue(compra).addOnSuccessListener(unused -> {
-            Toast.makeText(compraFragment.getContext(), compraFragment.getString(R.string.exitoGuardarCompra), Toast.LENGTH_SHORT).show();
-            compraFragment.initListaLineas();
-            compraFragment.setBarraCarga(View.GONE);
+            if (compraFragment != null) {
+                Toast.makeText(compraFragment.getContext(), compraFragment.getString(R.string.exitoGuardarCompra), Toast.LENGTH_SHORT).show();
+                compraFragment.initListaLineas();
+                compraFragment.setBarraCarga(View.GONE);
+            }
         }).addOnFailureListener(e -> {
-            Toast.makeText(compraFragment.getContext(), compraFragment.getString(R.string.falloGuardarCompra), Toast.LENGTH_SHORT).show();
-            compraFragment.setBarraCarga(View.GONE);
+            if (compraFragment != null) {
+                Toast.makeText(compraFragment.getContext(), compraFragment.getString(R.string.falloGuardarCompra), Toast.LENGTH_SHORT).show();
+                compraFragment.setBarraCarga(View.GONE);
+            }
+            if (guardarProductoActivity != null) {
+                Toast.makeText(guardarProductoActivity, guardarProductoActivity.getString(R.string.falloGuardarCompra), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

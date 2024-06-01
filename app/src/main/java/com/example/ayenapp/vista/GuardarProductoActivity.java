@@ -25,14 +25,21 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ayenapp.R;
+import com.example.ayenapp.modelo.Compra;
+import com.example.ayenapp.modelo.Linea;
 import com.example.ayenapp.modelo.Producto;
 import com.example.ayenapp.servicio.CamaraService;
+import com.example.ayenapp.servicio.CompraService;
 import com.example.ayenapp.servicio.EscanerService;
 import com.example.ayenapp.servicio.GaleriaService;
 import com.example.ayenapp.servicio.ProductoService;
 import com.example.ayenapp.util.Util;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuardarProductoActivity extends AppCompatActivity {
 
@@ -56,6 +63,7 @@ public class GuardarProductoActivity extends AppCompatActivity {
     private CamaraService camaraService;
     private GaleriaService galeriaService;
     private EscanerService escanerService;
+    private CompraService compraService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +89,7 @@ public class GuardarProductoActivity extends AppCompatActivity {
         camaraService = new CamaraService(this);
         galeriaService = new GaleriaService(this);
         escanerService = new EscanerService(this);
+        compraService = new CompraService(this);
 
         txtCodigo = findViewById(R.id.txtCodigo);
         txtNombre = findViewById(R.id.txtNombre);
@@ -97,12 +106,15 @@ public class GuardarProductoActivity extends AppCompatActivity {
         initSubirFoto();
         initCodigoBarras();
         initProductoAntiguo();
-        initCrear();
+        initGuardar();
         initBarraCarga();
 
         findViewById(R.id.btnCancelar).setOnClickListener(v -> finish());
     }
 
+    /**
+     * Inicializar el producto antiguo si se esta modificando
+     */
     private void initProductoAntiguo() {
         if (productoAntiguo != null) {
             txtCodigo.setText(productoAntiguo.getCodigo());
@@ -162,9 +174,9 @@ public class GuardarProductoActivity extends AppCompatActivity {
     }
 
     /**
-     * Inicializa el botón de crear
+     * Inicializa el botón de guardar
      */
-    private void initCrear() {
+    private void initGuardar() {
         Button btnCrear = findViewById(R.id.btnGuardar);
         btnCrear.setOnClickListener(v -> guardarProducto());
     }
@@ -203,8 +215,32 @@ public class GuardarProductoActivity extends AppCompatActivity {
                     IMAGE_STORAGE_BASE + txtCodigo.getText().toString().trim() + ".jpg"
             );
 
+            if (switchAddCompra.isChecked()) {
+                addCompra(producto);
+            }
+
             productoService.guardarProducto(producto, fotoUri);
         }
+    }
+
+    /**
+     * Añade a compras el producto creado
+     *
+     * @param producto Producto creado
+     */
+    private void addCompra(Producto producto) {
+        LocalDateTime fecha = LocalDateTime.now();
+        List<Linea> lineas = new ArrayList<>();
+        lineas.add(new Linea(producto, producto.getStock(), producto.getCoste() * producto.getStock()));
+
+        Compra compra = new Compra(
+                "C-" + Util.crearCodigoVentaCompra(fecha),
+                Util.formatearFechaHora(fecha),
+                lineas,
+                lineas.stream().mapToDouble(Linea::getPrecio).sum()
+        );
+
+        compraService.guardarCompra(compra);
     }
 
     /**
