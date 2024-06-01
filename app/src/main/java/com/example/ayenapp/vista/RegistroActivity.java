@@ -26,7 +26,7 @@ import java.util.List;
 
 public class RegistroActivity extends AppCompatActivity {
 
-    private TextView txtCodigo, txtFecha;
+    private TextView txtCodigo, txtFecha, txtTotal;
     private RecyclerView rv;
     private Button btnCerrar;
     private MaterialToolbar toolbar;
@@ -54,6 +54,7 @@ public class RegistroActivity extends AppCompatActivity {
     private void init() {
         txtCodigo = findViewById(R.id.txtCodigoRegistroDetalles);
         txtFecha = findViewById(R.id.txtFechaRegistroDetalles);
+        txtTotal = findViewById(R.id.txtTotalRegistroDetalles);
         rv = findViewById(R.id.rvRegistro);
         btnCerrar = findViewById(R.id.btnCerrarRegistro);
         toolbar = findViewById(R.id.toolbarRegistro);
@@ -74,6 +75,7 @@ public class RegistroActivity extends AppCompatActivity {
         if (compra != null) {
             txtCodigo.setText(compra.getCodigo());
             txtFecha.setText(Util.formatearFechaHora(compra.getFecha()));
+            txtTotal.setText(Util.formatearDouble(compra.getTotal()) + "€");
             initLista(compra.getLineasCompra());
         }
     }
@@ -85,6 +87,7 @@ public class RegistroActivity extends AppCompatActivity {
         if (venta != null) {
             txtCodigo.setText(venta.getCodigo());
             txtFecha.setText(Util.formatearFechaHora(venta.getFecha()));
+            txtTotal.setText(Util.formatearDouble(venta.getTotal()) + "€");
             initLista(venta.getLineasVenta());
         }
     }
