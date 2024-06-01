@@ -246,11 +246,13 @@ public class TpvFragment extends Fragment {
                 Integer nuevaCantidad = lineaAntigua.getCantidad() + 1;
                 lineaAntigua.setCantidad(nuevaCantidad);
                 lineaAntigua.setPrecio(nuevaCantidad * lineaAntigua.getProducto().getPrecio());
+                tpvAdapter.notifyItemChanged(lineasVenta.indexOf(lineaAntigua));
             } else {
-                lineasVenta.add(nuevaLinea);
+                lineasVenta.add(0, nuevaLinea);
+                tpvAdapter.notifyItemInserted(0);
+                rv.scrollToPosition(0);
             }
 
-            tpvAdapter.notifyDataSetChanged();
             comprobarListaVacia(lineasVenta);
         } else {
             if (toast != null) {

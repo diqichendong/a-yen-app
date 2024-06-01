@@ -126,7 +126,7 @@ public class CompraFragment extends Fragment {
         Compra compra = new Compra(
                 "C-" + Util.crearCodigoVentaCompra(fechaActual),
                 Util.formatearFechaHora(fechaActual),
-                lineasCompra,
+                lineasCompra.stream().filter(linea -> linea.getCantidad() > 0).collect(Collectors.toList()),
                 lineasCompra.stream().mapToDouble(Linea::getPrecio).sum()
         );
         compraService.guardarCompra(compra);
@@ -204,9 +204,9 @@ public class CompraFragment extends Fragment {
             Linea nuevaLinea = new Linea(producto, 0, 0.0);
             if (!lineasCompra.contains(nuevaLinea)) {
                 lineasCompra.add(nuevaLinea);
+                compraAdapter.notifyItemInserted(lineasCompra.size() - 1);
             }
 
-            compraAdapter.notifyDataSetChanged();
             comprobarListaVacia(lineasCompra);
         }
     }

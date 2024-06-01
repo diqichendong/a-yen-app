@@ -37,7 +37,7 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
     @Override
     public CompraViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_linea_compra, parent, false);
-        return new CompraAdapter.CompraViewHolder(v);
+        return new CompraViewHolder(v);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
         return datalist.size();
     }
 
-    public class CompraViewHolder extends RecyclerView.ViewHolder {
+    public static class CompraViewHolder extends RecyclerView.ViewHolder {
 
         public TextView txtNombre, txtPrecio;
         public EditText txtCantidad, txtCoste;
@@ -82,21 +82,16 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
         }
     }
 
-    public void setDatalist(List<Linea> datalist) {
-        this.datalist = datalist;
-        compraFragment.actualizarTotal();
-        notifyDataSetChanged();
-    }
-
     /**
      * Borrar una linea de venta
      *
      * @param linea Linea de venta
      */
     private void borrarLinea(Linea linea) {
+        int pos = datalist.indexOf(linea);
         this.datalist.remove(linea);
         compraFragment.actualizarTotal();
-        notifyDataSetChanged();
+        notifyItemRemoved(pos);
     }
 
     /**
@@ -119,9 +114,13 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
             public void afterTextChanged(Editable s) {
                 if (!s.toString().trim().isEmpty()) {
                     Integer cantidad = new Integer(s.toString());
-                    linea.setCantidad(cantidad);
-                    linea.setPrecio(cantidad * linea.getProducto().getCoste());
-                    holder.txtPrecio.setText(Util.formatearDouble(linea.getPrecio()) + "€");
+                    if (cantidad >= 0) {
+                        linea.setCantidad(cantidad);
+                        linea.setPrecio(cantidad * linea.getProducto().getCoste());
+                        holder.txtPrecio.setText(Util.formatearDouble(linea.getPrecio()) + "€");
+                    } else {
+                        holder.txtCantidad.setText("0");
+                    }
                 } else {
                     holder.txtCantidad.setText("0");
                     holder.txtCantidad.selectAll();

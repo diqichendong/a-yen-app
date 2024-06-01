@@ -104,9 +104,10 @@ public class TpvAdapter extends RecyclerView.Adapter<TpvAdapter.TpvViewHolder> {
      * @param linea Linea de venta
      */
     private void borrarLinea(Linea linea) {
+        int pos = datalist.indexOf(linea);
         this.datalist.remove(linea);
         tpvFragment.actualizarTotal();
-        notifyDataSetChanged();
+        notifyItemRemoved(pos);
     }
 
 }
