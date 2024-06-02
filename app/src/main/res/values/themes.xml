@@ -1,8 +1,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.AYENApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/theme01</item>
+        <item name="colorPrimaryDark">@color/theme03</item>
+        <item name="android:colorAccent">@color/theme01</item>
+        <item name="android:colorBackground">@color/themebg</item>
+        <item name="colorOnPrimary">@color/theme05</item>
+        <item name="android:textColor">@color/theme05</item>
+        <item name="android:indeterminateTint">@color/theme02</item>
+        <item name="bottomNavigationStyle">@style/BottomNavigationViewTheme</item>
+        <item name="thumbTint">@color/theme01</item>
+        <item name="trackTint">@color/theme03</item>
+        <item name="materialCardViewStyle">@style/CardTheme</item>
+        <item name="tabBackground">@color/theme04</item>
+
+    </style>
+
+    <style name="BottomNavigationViewTheme" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/theme04</item>
+        <item name="itemIconTint">@color/theme02</item>
+        <item name="itemTextColor">@color/theme01</item>
+        <item name="itemActiveIndicatorStyle">@style/ItemActiveTheme</item>
+    </style>
+
+    <style name="ItemActiveTheme" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/theme03</item>
+    </style>
+
+    <style name="CardTheme" parent="Widget.Material3.CardView.Filled">
+        <item name="android:backgroundTint">@color/theme02</item>
     </style>
 
     <style name="Theme.AYENApp" parent="Base.Theme.AYENApp" />

@@ -4,4 +4,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#F44336</color>
     <color name="green">#4CAF50</color>
+
+    <color name="theme01">#00a6fb</color>
+    <color name="theme02">#0582ca</color>
+    <color name="theme03">#006494</color>
+    <color name="theme04">#003554</color>
+    <color name="theme05">#051923</color>
+    <color name="themebg">#C3E1EF</color>
 </resources>

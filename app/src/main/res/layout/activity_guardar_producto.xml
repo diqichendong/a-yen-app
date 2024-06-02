@@ -117,8 +117,10 @@
                         android:id="@+id/btnCodigoBarras"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/codigo_barras_icon" />
+                        android:layout_weight="0"
+                        app:srcCompat="@drawable/codigo_barras_icon"
+                        android:background="@drawable/blue_circular_shape"
+                        android:padding="10dp"/>
                 </LinearLayout>
 
                 <LinearLayout

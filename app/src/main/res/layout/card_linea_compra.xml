@@ -27,8 +27,7 @@
 
             <TextView
                 android:id="@+id/txtNombreLineaCompra"
-                android:layout_width="0dp
-"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
@@ -68,25 +67,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    app:srcCompat="@drawable/menos_icon" />
+                    app:srcCompat="@drawable/menos_icon"
+                    android:background="@drawable/white_circular_shape"
+                    android:padding="1dp"
+                    android:layout_gravity="center"/>
 
                 <EditText
                     android:id="@+id/txtCantidadLineaCompra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:ems="2"
+                    android:ems="3"
                     android:inputType="number"
                     android:selectAllOnFocus="true"
                     android:text="1"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textSize="14sp"/>
 
                 <ImageButton
                     android:id="@+id/btnMasLineaCompra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    app:srcCompat="@drawable/mas_icon" />
+                    app:srcCompat="@drawable/mas_icon"
+                    android:background="@drawable/white_circular_shape"
+                    android:padding="1dp"
+                    android:layout_gravity="center" />
             </LinearLayout>
 
             <TextView
@@ -95,6 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/txtCantidadLineaCompra"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@+id/linearLayout47"
                 app:layout_constraintStart_toStartOf="@+id/linearLayout47"
                 app:layout_constraintTop_toBottomOf="@+id/txtPrecioLineaCompra" />
@@ -104,10 +111,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:ems="3"
+                android:ems="4"
                 android:inputType="numberDecimal"
                 android:selectAllOnFocus="true"
                 android:textAlignment="textEnd"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/textView17"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
@@ -117,7 +125,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/txtCosteLineaCompra"
-                app:layout_constraintEnd_toEndOf="@+id/txtCosteLineaCompra"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/textView17"
                 app:layout_constraintStart_toStartOf="@+id/txtCosteLineaCompra"
                 app:layout_constraintTop_toBottomOf="@+id/txtNombreLineaCompra" />
 
@@ -125,7 +134,7 @@
                 android:id="@+id/textView17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="24dp"
                 android:text="€"
                 app:layout_constraintBottom_toBottomOf="@+id/txtCosteLineaCompra"
                 app:layout_constraintEnd_toStartOf="@+id/linearLayout47"
@@ -135,12 +144,14 @@
                 android:id="@+id/btnBorrarLineaCompra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:tint="@color/red"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/red_rectangle_shape"
+                android:padding="5dp"
                 app:layout_constraintBottom_toBottomOf="@+id/txtCosteLineaCompra"
-                app:layout_constraintEnd_toStartOf="@+id/txtCosteLineaCompra"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView16"
-                app:srcCompat="@drawable/x_icon" />
+                app:srcCompat="@drawable/x_icon"
+                app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
