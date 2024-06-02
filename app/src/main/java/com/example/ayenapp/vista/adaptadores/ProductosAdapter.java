@@ -121,6 +121,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     public void borrarProducto(Producto producto) {
         datalist.remove(producto);
         notifyDataSetChanged();
+        productosFragment.setTxtBuscar("");
         productosFragment.setBarraCarga(View.GONE);
     }
 
